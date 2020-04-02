@@ -1,10 +1,10 @@
 package org.rha.services.document_generation.utils;
 
+import org.rha.services.document_generation.core.model.exceptions.DocumentConversionException;
+import org.rha.services.document_generation.core.model.exceptions.DocumentTemplatingException;
+
 import java.io.IOException;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.function.*;
 
 public final class LambdaExceptionUtils {
     @FunctionalInterface
@@ -20,6 +20,11 @@ public final class LambdaExceptionUtils {
     @FunctionalInterface
     public interface Function_WithExceptions<T, R, E extends Exception> {
         R apply(T t) throws E;
+    }
+
+    @FunctionalInterface
+    public interface BiFunction_WithExceptions<T, U, R, E extends Exception> {
+        R apply(T t, U u) throws E, DocumentConversionException, DocumentTemplatingException;
     }
 
     @FunctionalInterface
@@ -56,6 +61,17 @@ public final class LambdaExceptionUtils {
         return t -> {
             try {
                 return function.apply(t);
+            } catch (Exception exception) {
+                throwAsUnchecked(exception);
+                return null;
+            }
+        };
+    }
+
+    public static <T, U, R, E extends Exception> BiFunction<T, U, R> rethrowBiFunction(BiFunction_WithExceptions<T, U, R, E> biFunction) throws E {
+        return (t, u) -> {
+            try {
+                return biFunction.apply(t, u);
             } catch (Exception exception) {
                 throwAsUnchecked(exception);
                 return null;
