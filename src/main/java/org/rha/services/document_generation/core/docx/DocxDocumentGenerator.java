@@ -1,10 +1,13 @@
 package org.rha.services.document_generation.core.docx;
 
+import org.apache.commons.io.IOUtils;
 import org.rha.services.document_generation.core.DocumentFormatConverter;
 import org.rha.services.document_generation.core.DocumentGenerator;
 import org.rha.services.document_generation.core.DocumentTemplater;
 import org.rha.services.document_generation.core.model.DocumentGenerationRequest;
 import org.rha.services.document_generation.core.model.exceptions.DocumentConversionException;
+import org.rha.services.document_generation.db.DBHelper;
+import org.rha.services.document_generation.db.dto.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +19,7 @@ import javax.ws.rs.core.MediaType;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 import static org.rha.services.document_generation.utils.LambdaExceptionUtils.rethrowBiConsumer;
@@ -39,6 +43,8 @@ public class DocxDocumentGenerator implements DocumentGenerator {
     Client httpRequestClient;
 
     Logger logger = LoggerFactory.getLogger(DocxDocumentGenerator.class);
+
+    DBHelper dbHelper = new DBHelper();
 
     @Override
     public CompletableFuture<Void> generateDocument(DocumentGenerationRequest documentGenerationRequest) throws Exception {
@@ -80,6 +86,8 @@ public class DocxDocumentGenerator implements DocumentGenerator {
                                             case DOCX:
                                                 logger.debug("Starting docx to docx conversion");
                                                 this.toDocxFormatConverter.convert(inputStream, f.getValue());
+                                                // DB insert here?
+                                                dbHelper.saveDocument(new Document(UUID.randomUUID().toString(), IOUtils.toByteArray(inputStream), "LEVEL_1"));
                                                 logger.debug("Finished docx to docx conversion");
                                                 break;
                                             case PDF:
