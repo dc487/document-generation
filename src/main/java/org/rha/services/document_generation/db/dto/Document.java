@@ -7,7 +7,11 @@ import javax.persistence.*;
         @NamedQuery(
             name = "findDocumentById",
             query = "from Document d where d.id = :id"
-        )
+        ),
+        @NamedQuery(
+                name = "findDocumentByName",
+                query = "from Document d where d.fileName = :fileName"
+        ),
     }
 )
 
