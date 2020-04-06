@@ -45,7 +45,7 @@ public class DBHelper {
     }
 
     @SuppressWarnings("unchecked")
-    public Document getDocument(int documentId) {
+    public Document getDocumentById(int documentId) {
         // Config
         StandardServiceRegistry ssr = new StandardServiceRegistryBuilder().configure("hibernate.cfg.xml").build();
         Metadata meta = new MetadataSources(ssr).getMetadataBuilder().build();
@@ -65,6 +65,34 @@ public class DBHelper {
         // Commit and close
         transaction.commit();
         logger.info("Retrieved document with ID " + documentId + " from database!");
+
+        factory.close();
+        session.close();
+
+        return document;
+    }
+
+    @SuppressWarnings("unchecked")
+    public Document getDocumentByName(String fileName) {
+        // Config
+        StandardServiceRegistry ssr = new StandardServiceRegistryBuilder().configure("hibernate.cfg.xml").build();
+        Metadata meta = new MetadataSources(ssr).getMetadataBuilder().build();
+
+        // Create session
+        SessionFactory factory = meta.getSessionFactoryBuilder().build();
+        Session session = factory.openSession();
+
+        // Begin transaction
+        Transaction transaction = session.beginTransaction();
+
+        // Query for the document
+        TypedQuery<Document> query = session.getNamedQuery("findDocumentByName");
+        query.setParameter("fileName", fileName);
+        Document document = query.getSingleResult();
+
+        // Commit and close
+        transaction.commit();
+        logger.info("Retrieved document with file name " + fileName + " from database!");
 
         factory.close();
         session.close();
