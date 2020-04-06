@@ -19,7 +19,7 @@ public class DBHelper {
     public DBHelper() {
     }
 
-    public void saveDocument(Document document) {
+    public int saveDocument(Document document) {
         // Config
         StandardServiceRegistry ssr = new StandardServiceRegistryBuilder().configure("hibernate.cfg.xml").build();
         Metadata meta = new MetadataSources(ssr).getMetadataBuilder().build();
@@ -40,6 +40,8 @@ public class DBHelper {
 
         factory.close();
         session.close();
+
+        return document.getId();
     }
 
     @SuppressWarnings("unchecked")

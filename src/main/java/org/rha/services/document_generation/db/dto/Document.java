@@ -5,7 +5,7 @@ import javax.persistence.*;
 @NamedQueries(
     {
         @NamedQuery(
-            name = "getDocumentById",
+            name = "findDocumentById",
             query = "from Document d where d.id = :id"
         )
     }
@@ -18,8 +18,15 @@ public class Document {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
+
+    @Column(nullable = false)
     private String fileName;
+
+    @Lob
+    @Column(nullable = false)
     private byte[] content;
+
+    @Column(nullable = false)
     private String securityLabel;
 
     public Document() {
