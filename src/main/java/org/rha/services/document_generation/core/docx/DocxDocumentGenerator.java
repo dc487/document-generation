@@ -86,13 +86,11 @@ public class DocxDocumentGenerator implements DocumentGenerator {
                                             case DOCX:
                                                 logger.debug("Starting docx to docx conversion");
                                                 this.toDocxFormatConverter.convert(inputStream, f.getValue());
+
                                                 // DB insert here?
                                                 String docName = UUID.randomUUID().toString();
                                                 logger.debug("New doc name is " + docName);
                                                 dbHelper.saveDocument(new Document(docName, templatedOutputBytes, "LEVEL_1"));
-
-                                                Document retrievedDocument = dbHelper.getDocumentByName(docName);
-                                                logger.debug("Retrieved doc name is " + retrievedDocument.getFileName());
 
                                                 logger.debug("Finished docx to docx conversion");
                                                 break;
