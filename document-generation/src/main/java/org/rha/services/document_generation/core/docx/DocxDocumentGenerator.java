@@ -1,10 +1,10 @@
 package org.rha.services.document_generation.core.docx;
 
-import org.apache.commons.io.IOUtils;
 import org.rha.services.document_generation.core.DocumentFormatConverter;
 import org.rha.services.document_generation.core.DocumentGenerator;
 import org.rha.services.document_generation.core.DocumentTemplater;
 import org.rha.services.document_generation.core.model.DocumentGenerationRequest;
+import org.rha.services.document_generation.core.model.DocumentOutputFormat;
 import org.rha.services.document_generation.core.model.exceptions.DocumentConversionException;
 import org.rha.services.document_generation.db.DBHelper;
 import org.rha.services.document_generation.db.dto.Document;
@@ -19,8 +19,14 @@ import javax.ws.rs.core.MediaType;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.net.URI;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.Executor;
+import java.util.stream.Stream;
 
 import static org.rha.services.document_generation.utils.LambdaExceptionUtils.rethrowBiConsumer;
 import static org.rha.services.document_generation.utils.LambdaExceptionUtils.rethrowConsumer;
@@ -46,8 +52,10 @@ public class DocxDocumentGenerator implements DocumentGenerator {
 
     DBHelper dbHelper = new DBHelper();
 
+    private final Executor backgroundJobExecutor = Runnable::run;
+
     @Override
-    public CompletableFuture<Void> generateDocument(DocumentGenerationRequest documentGenerationRequest) throws Exception {
+    public CompletableFuture<Map<DocumentOutputFormat, URI>> generateDocuments(DocumentGenerationRequest documentGenerationRequest) throws Exception {
 
         final CompletableFuture<InputStream> documentTemplateResponse = httpRequestClient
                 .target(documentGenerationRequest.getDocumentTemplateUri())
@@ -64,6 +72,9 @@ public class DocxDocumentGenerator implements DocumentGenerator {
                 .rx()
                 .get(InputStream.class)
                 .toCompletableFuture();
+
+        final ConcurrentMap<DocumentOutputFormat, URI> documentUriMap = new ConcurrentHashMap<>();
+        final Stream.Builder<CompletableFuture<Void>> backgroundJobs = Stream.builder();
 
         return documentTemplateResponse
                 .thenAcceptBothAsync(
@@ -82,16 +93,11 @@ public class DocxDocumentGenerator implements DocumentGenerator {
                             documentGenerationRequest.getOutputDocuments().entrySet().parallelStream()
                                     .forEach(rethrowConsumer(f -> {
                                         final InputStream inputStream = new ByteArrayInputStream(templatedOutputBytes);
+                                        final String docName = UUID.randomUUID().toString();
                                         switch (f.getKey()) {
                                             case DOCX:
                                                 logger.debug("Starting docx to docx conversion");
                                                 this.toDocxFormatConverter.convert(inputStream, f.getValue());
-
-                                                // DB insert here?
-                                                String docName = UUID.randomUUID().toString();
-                                                logger.debug("New doc name is " + docName);
-                                                dbHelper.saveDocument(new Document(docName, templatedOutputBytes, "LEVEL_1"));
-
                                                 logger.debug("Finished docx to docx conversion");
                                                 break;
                                             case PDF:
@@ -103,7 +109,20 @@ public class DocxDocumentGenerator implements DocumentGenerator {
                                                 throw new DocumentConversionException("Unsupported output document format: " +
                                                         f.getKey().name());
                                         }
+                                        logger.debug("Saving document to database");
+                                        dbHelper.saveDocument(new Document(docName, f.getValue().toByteArray(), "LEVEL_1"));
+
+                                        final CompletableFuture<Void> newEntry = CompletableFuture.runAsync(() -> {
+                                            documentUriMap.put(f.getKey(), URI.create("http://localhost:8080/api/generated-docs?name=" + docName));
+                                        }, backgroundJobExecutor);
+                                        backgroundJobs.add(newEntry);
                                     }));
-                        }));
+
+                            logger.debug("Finished all document generation and database storage");
+                            CompletableFuture.allOf(
+                                    backgroundJobs.build().toArray(
+                                            CompletableFuture[]::new
+                                    ));
+                        })).thenApply(x -> documentUriMap);
     }
 }

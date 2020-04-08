@@ -1,22 +1,20 @@
 package org.rha.services.document_generation.core.model;
 
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 public final class DocumentGenerationRequest {
     private final URI documentTemplateUri;
     private final URI documentContentUri;
-    private final Map<DocumentOutputFormat, OutputStream> outputDocuments;
+    private final Map<DocumentOutputFormat, ByteArrayOutputStream> outputDocuments;
 
     public DocumentGenerationRequest(
             final URI documentTemplateUri,
             final URI documentContentUri,
-            final Map<DocumentOutputFormat, OutputStream> outputDocuments
+            final Map<DocumentOutputFormat, ByteArrayOutputStream> outputDocuments
     ) {
         if (documentTemplateUri == null)
             throw new IllegalArgumentException("documentTemplate cannot be null");
@@ -38,7 +36,7 @@ public final class DocumentGenerationRequest {
         return this.documentContentUri;
     }
 
-    public Map<DocumentOutputFormat, OutputStream> getOutputDocuments() {
+    public Map<DocumentOutputFormat, ByteArrayOutputStream> getOutputDocuments() {
         return this.outputDocuments;
     }
 }

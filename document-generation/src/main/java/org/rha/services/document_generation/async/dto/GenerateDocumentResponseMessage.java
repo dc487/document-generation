@@ -10,6 +10,10 @@ import java.util.Objects;
 public class GenerateDocumentResponseMessage {
     private Map<DocumentOutputFormat, URI> generatedDocuments = Collections.emptyMap();
 
+    public GenerateDocumentResponseMessage(Map<DocumentOutputFormat, URI> generatedDocuments) {
+        this.generatedDocuments = generatedDocuments;
+    }
+
     public Map<DocumentOutputFormat, URI> getGeneratedDocuments() {
         return generatedDocuments;
     }
