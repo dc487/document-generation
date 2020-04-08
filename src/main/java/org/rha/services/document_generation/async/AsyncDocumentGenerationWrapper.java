@@ -16,13 +16,9 @@ import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.ws.rs.client.Client;
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-import static org.rha.services.document_generation.utils.LambdaExceptionUtils.rethrowConsumer;
 import static org.rha.services.document_generation.utils.LambdaExceptionUtils.rethrowFunction;
 
 @ApplicationScoped
@@ -55,17 +51,10 @@ public class AsyncDocumentGenerationWrapper {
                         .stream()
                         .collect(Collectors.toMap(
                                 f -> f,
-                                f -> {
-                                    try {
-                                        return new FileOutputStream("D:\\output\\" + UUID.randomUUID().toString() + "." + f.name());
-                                    } catch (FileNotFoundException e) {
-                                        e.printStackTrace();
-                                    }
-                                    return null;
-                                }
+                                f -> new ByteArrayOutputStream()
                         ))))
-                .thenCompose(rethrowFunction(documentGenerator::generateDocument))
-                .thenApply(x -> new GenerateDocumentResponseMessage())
+                .thenCompose(rethrowFunction(documentGenerator::generateDocuments))
+                .thenApply(GenerateDocumentResponseMessage::new)
                 .exceptionally(e -> {
                     logger.error("An error occurred while generating the document", e);
                     return null;

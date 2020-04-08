@@ -48,7 +48,7 @@ public class DocumentGenerationResource {
                                 f -> f,
                                 f -> new ByteArrayOutputStream()
                         ))))
-                .thenCompose(rethrowFunction(documentGenerator::generateDocument))
+                .thenCompose(rethrowFunction(documentGenerator::generateDocuments))
                 .thenApply(asyncResponse::resume)
                 .exceptionally(e -> {
                     logger.error("An error occurred while generating the document", e);
