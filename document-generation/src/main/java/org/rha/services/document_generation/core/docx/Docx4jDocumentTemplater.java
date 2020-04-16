@@ -3,6 +3,7 @@ package org.rha.services.document_generation.core.docx;
 import org.docx4j.Docx4J;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
+import org.eclipse.microprofile.metrics.annotation.Timed;
 import org.rha.services.document_generation.core.DocumentTemplater;
 import org.rha.services.document_generation.core.model.exceptions.DocumentTemplatingException;
 import org.slf4j.Logger;
@@ -19,6 +20,7 @@ public class Docx4jDocumentTemplater implements DocumentTemplater {
     Logger logger = LoggerFactory.getLogger(Docx4jDocumentTemplater.class);
 
     @Override
+    @Timed
     public void populateDocumentTemplate(InputStream templateInputStream, InputStream contentInputStream,
                                          OutputStream outputStream) throws DocumentTemplatingException {
         try {

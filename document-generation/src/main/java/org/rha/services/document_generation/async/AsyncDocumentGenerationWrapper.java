@@ -1,5 +1,6 @@
 package org.rha.services.document_generation.async;
 
+import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.reactive.messaging.Acknowledgment;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
@@ -14,6 +15,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
+import javax.transaction.Transactional;
 import javax.ws.rs.client.Client;
 import java.io.ByteArrayOutputStream;
 import java.util.concurrent.CompletableFuture;
@@ -37,6 +39,8 @@ public class AsyncDocumentGenerationWrapper {
     @Incoming("generate-document-request")
     @Outgoing("generate-document-response")
     @Acknowledgment(Acknowledgment.Strategy.POST_PROCESSING)
+    @Transactional
+    @Counted
     public CompletableFuture<GenerateDocumentResponseMessage> generateDocuments(byte[] messageBytes)
             throws Exception {
         final String message = new String(messageBytes, "UTF-8");

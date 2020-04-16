@@ -1,5 +1,6 @@
 package org.rha.services.document_generation.core;
 
+import org.eclipse.microprofile.metrics.annotation.Timed;
 import org.rha.services.document_generation.core.model.exceptions.DocumentConversionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ public class NoopDocumentFormatConverter implements DocumentFormatConverter {
     Logger logger = LoggerFactory.getLogger(NoopDocumentFormatConverter.class);
 
     @Override
+    @Timed
     public void convert(InputStream inputStream, OutputStream outputStream) throws DocumentConversionException {
         try {
             inputStream.transferTo(outputStream);
