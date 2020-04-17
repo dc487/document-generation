@@ -11,5 +11,6 @@
         <property name="connection.password">password</property>
         <property name="connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
         <mapping class="org.rha.services.document_generation.db.dto.Document"/>
+        <mapping class="org.rha.services.document_generation.db.dto.Version"/>
     </session-factory>
 </hibernate-configuration>
