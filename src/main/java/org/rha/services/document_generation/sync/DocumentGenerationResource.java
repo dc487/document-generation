@@ -1,6 +1,8 @@
 package org.rha.services.document_generation.sync;
 
-import org.eclipse.microprofile.metrics.annotation.Timed;
+import org.eclipse.microprofile.context.ManagedExecutor;
+import org.eclipse.microprofile.context.ThreadContext;
+import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.rha.services.document_generation.core.DocumentGenerator;
 import org.rha.services.document_generation.core.model.DocumentGenerationRequest;
 import org.rha.services.document_generation.sync.dto.GenerateDocumentRequest;
@@ -29,13 +31,19 @@ public class DocumentGenerationResource {
     @Inject
     DocumentGenerator documentGenerator;
 
+    @Inject
+    ThreadContext threadContext;
+
+    @Inject
+    ManagedExecutor managedExecutor;
+
     Logger logger = LoggerFactory.getLogger(DocumentGenerationResource.class);
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @Timed
     @Transactional
+    @Counted
     public void generateDocument(@Suspended AsyncResponse asyncResponse,
                                  GenerateDocumentRequest generateDocumentRequest) throws Exception {
         CompletableFuture.supplyAsync(() -> new DocumentGenerationRequest(
