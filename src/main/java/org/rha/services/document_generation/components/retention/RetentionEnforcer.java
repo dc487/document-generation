@@ -1,7 +1,7 @@
 package org.rha.services.document_generation.components.retention;
 
 import org.rha.services.document_generation.db.DocumentHelper;
-import org.rha.services.document_generation.db.dto.VersionHelper;
+import org.rha.services.document_generation.db.VersionHelper;
 
 public class RetentionEnforcer {
     private VersionHelper versionHelper;
