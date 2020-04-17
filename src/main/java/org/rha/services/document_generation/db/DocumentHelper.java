@@ -46,10 +46,7 @@ public class DocumentHelper {
         Session session = DBHelper.getSession();
         Transaction transaction = session.beginTransaction();
 
-        // Query for the document
-        TypedQuery<Document> query = session.getNamedQuery(Document.FIND_BY_ID_QUERY);
-        query.setParameter(Document.FIND_BY_ID_QUERY_PARAM, documentId);
-        Document document = query.getSingleResult();
+        Document document = session.get(Document.class, documentId);
 
         // Commit and close
         transaction.commit();
