@@ -1,5 +1,6 @@
 package org.rha.services.document_generation.core;
 
+import org.eclipse.microprofile.metrics.annotation.Timed;
 import org.rha.services.document_generation.core.model.exceptions.DocumentTemplatingException;
 
 import java.io.InputStream;

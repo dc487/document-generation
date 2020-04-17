@@ -2,6 +2,7 @@ package org.rha.services.document_generation.core.docx;
 
 import fr.opensagres.xdocreport.converter.*;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
+import org.eclipse.microprofile.metrics.annotation.Timed;
 import org.rha.services.document_generation.core.DocumentFormatConverter;
 import org.rha.services.document_generation.core.model.exceptions.DocumentConversionException;
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ public class DocxToPdfDocumentFormatConverter implements DocumentFormatConverter
     Logger logger = LoggerFactory.getLogger(DocxToPdfDocumentFormatConverter.class);
 
     @Override
+    @Timed
     public void convert(InputStream inputStream, OutputStream outputStream) throws DocumentConversionException {
         try {
             final Options converterOptions = Options.getFrom(DocumentKind.DOCX).to(ConverterTypeTo.PDF);
