@@ -7,6 +7,7 @@ import org.rha.services.document_generation.core.model.DocumentGenerationRequest
 import org.rha.services.document_generation.core.model.DocumentOutputFormat;
 import org.rha.services.document_generation.core.model.exceptions.DocumentConversionException;
 import org.rha.services.document_generation.db.DBHelper;
+import org.rha.services.document_generation.db.DocumentHelper;
 import org.rha.services.document_generation.db.dto.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -50,7 +52,7 @@ public class DocxDocumentGenerator implements DocumentGenerator {
 
     Logger logger = LoggerFactory.getLogger(DocxDocumentGenerator.class);
 
-    DBHelper dbHelper = new DBHelper();
+    DocumentHelper documentHelper = new DocumentHelper();
 
     private final Executor backgroundJobExecutor = Runnable::run;
 
@@ -110,7 +112,7 @@ public class DocxDocumentGenerator implements DocumentGenerator {
                                                         f.getKey().name());
                                         }
                                         logger.debug("Saving document to database");
-                                        dbHelper.saveDocument(new Document(docName, f.getValue().toByteArray(), "LEVEL_1"));
+                                        documentHelper.saveDocument(new Document(docName, f.getValue().toByteArray(), "LEVEL_1", LocalDate.now()));
 
                                         final CompletableFuture<Void> newEntry = CompletableFuture.runAsync(() -> {
                                             documentUriMap.put(f.getKey(), URI.create("http://localhost:8080/api/generated-docs?name=" + docName));
