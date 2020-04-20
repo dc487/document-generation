@@ -9,6 +9,7 @@ public class DocumentTemplatingFailureMessage {
     private String sourceSystemId;
     private String documentType;
     private String documentUrn;
+    private String templateName;
 
     public String getFailureReason() {
         return failureReason;
@@ -56,5 +57,13 @@ public class DocumentTemplatingFailureMessage {
 
     public void setDocumentUrn(final String documentUrn) {
         this.documentUrn = documentUrn;
+    }
+
+    public String getTemplateName() {
+        return templateName;
+    }
+
+    public void setTemplateName(final String templateName) {
+        this.templateName = templateName;
     }
 }

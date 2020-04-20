@@ -4,6 +4,7 @@ import java.net.URI;
 
 public class TemplateDocumentMessage {
     private URI documentContentUri;
+    private String templateName;
     private URI documentTemplateUri;
     private String sourceSystemId;
     private String documentType;
@@ -15,6 +16,14 @@ public class TemplateDocumentMessage {
 
     public void setDocumentContentUri(final URI documentContentUri) {
         this.documentContentUri = documentContentUri;
+    }
+
+    public String getTemplateName() {
+        return templateName;
+    }
+
+    public void setTemplateName(final String templateName) {
+        this.templateName = templateName;
     }
 
     public URI getDocumentTemplateUri() {
