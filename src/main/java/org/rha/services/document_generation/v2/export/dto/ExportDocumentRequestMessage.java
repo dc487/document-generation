@@ -4,7 +4,7 @@ import java.net.URI;
 
 public class ExportDocumentRequestMessage {
     private URI documentUri;
-    private ExportSystem exportSystemId;
+    private String exportSystemId;
     private ExportMetadata exportMetadata;
 
     public ExportDocumentRequestMessage() {
@@ -19,11 +19,11 @@ public class ExportDocumentRequestMessage {
         this.documentUri = documentUri;
     }
 
-    public ExportSystem getExportSystemId() {
+    public String getExportSystemId() {
         return exportSystemId;
     }
 
-    public void setExportSystemId(ExportSystem exportSystemId) {
+    public void setExportSystemId(String exportSystemId) {
         this.exportSystemId = exportSystemId;
     }
 

@@ -16,11 +16,14 @@ import javax.transaction.Transactional;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CompletableFuture;
 
+import static org.rha.services.document_generation.utils.LambdaExceptionUtils.rethrowFunction;
+import static org.rha.services.document_generation.utils.LambdaExceptionUtils.rethrowSupplier;
+
 @ApplicationScoped
 public class AsyncExport {
 
     @Inject
-    IDocumentStore documentStore;
+    IDocumentExporter documentExporter;
 
     Jsonb jsonb = JsonbBuilder.create();
     Logger logger = LoggerFactory.getLogger(AsyncExport.class);
@@ -35,7 +38,14 @@ public class AsyncExport {
 
         final ExportDocumentRequestMessage exportRequestMessage = jsonb.fromJson(message, ExportDocumentRequestMessage.class);
 
-        return CompletableFuture.supplyAsync(() -> documentStore.saveDocument(exportRequestMessage.getExportMetadata()))
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                return documentExporter.saveDocument(exportRequestMessage);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        })
                 .thenApply(ExportDocumentSuccessMessage::new)
                 .exceptionally(e -> {
                     logger.error("Error occurred when trying to export document!");
