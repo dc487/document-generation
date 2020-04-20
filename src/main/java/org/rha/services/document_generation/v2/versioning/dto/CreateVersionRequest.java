@@ -1,21 +1,12 @@
-package org.rha.services.document_generation.v2.dto;
+package org.rha.services.document_generation.v2.versioning.dto;
 
 import com.ctc.wstx.shaded.msv_core.util.Uri;
 
-public class Version {
-    private Long versionId;
+public class CreateVersionRequest {
     private String sourceSystemId;
     private String documentType;
     private String documentUrn;
-    private Uri templatedDocumentUri;
-
-    public Long getVersionId() {
-        return versionId;
-    }
-
-    public void setVersionId(final Long versionId) {
-        this.versionId = versionId;
-    }
+    private Uri documentContentUri;
 
     public String getSourceSystemId() {
         return sourceSystemId;
@@ -41,11 +32,11 @@ public class Version {
         this.documentUrn = documentUrn;
     }
 
-    public Uri getTemplatedDocumentUri() {
-        return templatedDocumentUri;
+    public Uri getDocumentContentUri() {
+        return documentContentUri;
     }
 
-    public void setTemplatedDocumentUri(final Uri templatedDocumentUri) {
-        this.templatedDocumentUri = templatedDocumentUri;
+    public void setDocumentContentUri(final Uri documentContentUri) {
+        this.documentContentUri = documentContentUri;
     }
 }

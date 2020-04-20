@@ -1,8 +1,8 @@
-package org.rha.services.document_generation.v2;
+package org.rha.services.document_generation.v2.versioning;
 
-import org.rha.services.document_generation.v2.dto.CreateVersionRequest;
-import org.rha.services.document_generation.v2.dto.CreateVersionResponse;
-import org.rha.services.document_generation.v2.dto.FindVersionsResponse;
+import org.rha.services.document_generation.v2.versioning.dto.CreateVersionRequest;
+import org.rha.services.document_generation.v2.versioning.dto.CreateVersionResponse;
+import org.rha.services.document_generation.v2.versioning.dto.FindVersionsResponse;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
