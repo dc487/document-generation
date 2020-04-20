@@ -31,12 +31,6 @@ public class DocumentGenerationResource {
     @Inject
     DocumentGenerator documentGenerator;
 
-    @Inject
-    ThreadContext threadContext;
-
-    @Inject
-    ManagedExecutor managedExecutor;
-
     Logger logger = LoggerFactory.getLogger(DocumentGenerationResource.class);
 
     @POST
