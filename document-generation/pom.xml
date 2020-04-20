@@ -24,6 +24,13 @@
         <apache.xmlbeans.version>3.1.0</apache.xmlbeans.version>
         <oracle.jdbc.version>19.3.0.0</oracle.jdbc.version>
     </properties>
+    <repositories>
+        <repository>
+            <id>AsposeJavaAPI</id>
+            <name>Aspose Java API</name>
+            <url>https://repository.aspose.com/repo/</url>
+        </repository>
+    </repositories>
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -59,9 +66,15 @@
                 <version>${apache.xmlbeans.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.oracle</groupId>
+                <groupId>com.oracle.ojdbc</groupId>
                 <artifactId>ojdbc8</artifactId>
                 <version>${oracle.jdbc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aspose</groupId>
+                <artifactId>aspose-words</artifactId>
+                <version>20.4</version>
+                <type>pom</type>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -167,8 +180,13 @@
             <artifactId>xmlbeans</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.oracle</groupId>
+            <groupId>com.oracle.ojdbc</groupId>
             <artifactId>ojdbc8</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.aspose</groupId>
+            <artifactId>aspose-words</artifactId>
+            <type>pom</type>
         </dependency>
     </dependencies>
     <build>
