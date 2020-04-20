@@ -1,4 +1,4 @@
-package org.rha.services.document_generation.v2.dto;
+package org.rha.services.document_generation.v2.versioning.dto;
 
 import java.util.Collections;
 import java.util.List;
