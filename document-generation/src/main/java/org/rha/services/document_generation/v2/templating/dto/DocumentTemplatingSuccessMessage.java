@@ -8,6 +8,7 @@ public class DocumentTemplatingSuccessMessage {
     private String sourceSystemId;
     private String documentType;
     private String documentUrn;
+    private String templateName;
 
     public Long getDocumentTemplatingId() {
         return documentTemplatingId;
@@ -47,5 +48,13 @@ public class DocumentTemplatingSuccessMessage {
 
     public void setDocumentUrn(final String documentUrn) {
         this.documentUrn = documentUrn;
+    }
+
+    public String getTemplateName() {
+        return templateName;
+    }
+
+    public void setTemplateName(final String templateName) {
+        this.templateName = templateName;
     }
 }
