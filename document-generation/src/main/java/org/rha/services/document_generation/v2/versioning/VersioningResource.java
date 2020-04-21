@@ -4,11 +4,13 @@ import org.rha.services.document_generation.v2.versioning.dto.CreateVersionReque
 import org.rha.services.document_generation.v2.versioning.dto.CreateVersionResponse;
 import org.rha.services.document_generation.v2.versioning.dto.FindVersionsResponse;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/api/versions")
+@ApplicationScoped
 public class VersioningResource {
 
     @POST
