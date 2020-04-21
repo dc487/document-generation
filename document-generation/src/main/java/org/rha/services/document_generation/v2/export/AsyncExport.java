@@ -16,9 +16,6 @@ import javax.transaction.Transactional;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CompletableFuture;
 
-import static org.rha.services.document_generation.utils.LambdaExceptionUtils.rethrowFunction;
-import static org.rha.services.document_generation.utils.LambdaExceptionUtils.rethrowSupplier;
-
 @ApplicationScoped
 public class AsyncExport {
 
@@ -42,12 +39,19 @@ public class AsyncExport {
             try {
                 return documentExporter.saveDocument(exportRequestMessage);
             } catch (Exception e) {
+                //TODO: Send message to failure queue
                 e.printStackTrace();
                 return null;
             }
         })
-                .thenApply(ExportDocumentSuccessMessage::new)
+                .thenApply(uri -> new ExportDocumentSuccessMessage(
+                        uri,
+                        exportRequestMessage.getSourceSystemId(),
+                        exportRequestMessage.getDocumentType(),
+                        exportRequestMessage.getDocumentUrn())
+                )
                 .exceptionally(e -> {
+                    //TODO: Send message to failure queue
                     logger.error("Error occurred when trying to export document!");
                     return null;
                 });

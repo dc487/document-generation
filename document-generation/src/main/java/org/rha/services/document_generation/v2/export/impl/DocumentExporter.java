@@ -5,6 +5,8 @@ import org.rha.services.document_generation.v2.export.IDocumentExporter;
 import org.rha.services.document_generation.v2.export.IDocumentStore;
 import org.rha.services.document_generation.v2.export.dto.ExportDocumentRequestMessage;
 import org.rha.services.document_generation.v2.export.dto.ExportSystem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -23,6 +25,9 @@ public class DocumentExporter implements IDocumentExporter {
     @Inject
     Client httpRequestClient;
 
+    Logger logger = LoggerFactory.getLogger(DocumentExporter.class);
+
+    //TODO: Use CompletableFuture for this to make async
     @Override
     public URI saveDocument(ExportDocumentRequestMessage requestMessage) throws Exception {
 
@@ -33,6 +38,7 @@ public class DocumentExporter implements IDocumentExporter {
 
         switch (requestMessage.getExportSystemId()) {
             case ExportSystem.SHAREPOINT:
+                logger.info("Starting SharePoint Export");
                 return this.sharePointStore.saveDocument(documentContent, requestMessage.getExportMetadata());
             default:
                 throw new DocumentExportException("Unsupported export system");
