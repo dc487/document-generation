@@ -1,13 +1,16 @@
 package org.rha.services.document_generation.v2.versioning.dto;
 
-import com.ctc.wstx.shaded.msv_core.util.Uri;
+import java.net.URI;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Objects;
 
 public class Version {
     private Long versionId;
     private String sourceSystemId;
     private String documentType;
     private String documentUrn;
-    private Uri templatedDocumentUri;
+    private Map<String, URI> templatedDocuments;
 
     public Long getVersionId() {
         return versionId;
@@ -41,11 +44,11 @@ public class Version {
         this.documentUrn = documentUrn;
     }
 
-    public Uri getTemplatedDocumentUri() {
-        return templatedDocumentUri;
+    public Map<String, URI> getTemplatedDocuments() {
+        return templatedDocuments;
     }
 
-    public void setTemplatedDocumentUri(final Uri templatedDocumentUri) {
-        this.templatedDocumentUri = templatedDocumentUri;
+    public void setTemplatedDocuments(final Map<String, URI> templatedDocuments) {
+        this.templatedDocuments = Objects.requireNonNullElse(templatedDocuments, Collections.emptyMap());
     }
 }

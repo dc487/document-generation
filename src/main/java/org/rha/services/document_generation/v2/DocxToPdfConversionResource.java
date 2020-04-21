@@ -33,26 +33,26 @@ public class DocxToPdfConversionResource {
 
     @GET
     @Produces("application/pdf")
-    public void convertDocxDocumentToPdf(@QueryParam(value = "docxDocumentUri") URI docxDocumentUri,
+    public void convertDocxDocumentToPdf(@QueryParam(value = "originalDocumentUri") URI originalDocumentUri,
                                          @Suspended AsyncResponse asyncResponse) {
-        if (docxDocumentUri == null || !docxDocumentUri.isAbsolute()) {
-            logger.error("Invalid docxDocumentUri supplied");
+        if (originalDocumentUri == null || !originalDocumentUri.isAbsolute()) {
+            logger.error("Invalid originalDocumentUri supplied");
             asyncResponse.resume(
                     new WebApplicationException(
-                            "Invalid docxDocumentUri supplied",
+                            "Invalid originalDocumentUri supplied",
                             Response.Status.BAD_REQUEST));
             return;
-        } else if (!"http".equals(docxDocumentUri.getScheme()) && !"https".equals(docxDocumentUri.getScheme())) {
-            logger.error("Invalid docxDocumentUri supplied. The supplied URI must use either the http or https protocol.");
+        } else if (!"http".equals(originalDocumentUri.getScheme()) && !"https".equals(originalDocumentUri.getScheme())) {
+            logger.error("Invalid originalDocumentUri supplied. The supplied URI must use either the http or https protocol.");
             asyncResponse.resume(
                     new WebApplicationException(
-                            "Invalid docxDocumentUri supplied. The supplied URI must use either the http or https protocol.",
+                            "Invalid originalDocumentUri supplied. The supplied URI must use either the http or https protocol.",
                             Response.Status.BAD_REQUEST));
             return;
         }
 
         final CompletableFuture<InputStream> docxDocument = httpClient
-                .target(docxDocumentUri)
+                .target(originalDocumentUri)
                 .request()
                 .rx()
                 .get(InputStream.class)
