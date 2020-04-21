@@ -1,13 +1,22 @@
-package org.rha.services.document_generation.v2.dto;
+package org.rha.services.document_generation.v2.templating.dto;
 
 import java.net.URI;
 
-public class TemplateDocumentMessage {
+public class DocumentTemplatingFailureMessage {
+    private String failureReason;
     private URI documentContentUri;
     private URI documentTemplateUri;
     private String sourceSystemId;
     private String documentType;
     private String documentUrn;
+
+    public String getFailureReason() {
+        return failureReason;
+    }
+
+    public void setFailureReason(final String failureReason) {
+        this.failureReason = failureReason;
+    }
 
     public URI getDocumentContentUri() {
         return documentContentUri;

@@ -4,7 +4,7 @@ import org.rha.services.document_generation.db.DocumentHelper;
 import org.rha.services.document_generation.db.dto.Document;
 
 import org.eclipse.microprofile.reactive.messaging.Incoming;
-import org.rha.services.document_generation.v2.dto.TemplateDocumentMessage;
+import org.rha.services.document_generation.v2.templating.dto.TemplateDocumentMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +17,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 @Path("/api/templated-documents")
