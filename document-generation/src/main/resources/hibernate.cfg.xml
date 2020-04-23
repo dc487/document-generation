@@ -10,7 +10,8 @@
         <property name="connection.username">SYSTEM</property>
         <property name="connection.password">password</property>
         <property name="connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
-        <mapping class="org.rha.services.document_generation.db.dto.Document"/>
-        <mapping class="org.rha.services.document_generation.db.dto.Version"/>
+        <mapping class="org.rha.services.document_generation.v2.db.dto.Document"/>
+        <mapping class="org.rha.services.document_generation.v2.db.dto.Version"/>
+        <mapping class="org.rha.services.document_generation.v2.db.dto.ChildDocument"/>
     </session-factory>
 </hibernate-configuration>
