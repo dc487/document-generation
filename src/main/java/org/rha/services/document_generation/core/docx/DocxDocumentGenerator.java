@@ -6,9 +6,8 @@ import org.rha.services.document_generation.core.DocumentTemplater;
 import org.rha.services.document_generation.core.model.DocumentGenerationRequest;
 import org.rha.services.document_generation.core.model.DocumentOutputFormat;
 import org.rha.services.document_generation.core.model.exceptions.DocumentConversionException;
-import org.rha.services.document_generation.db.DBHelper;
-import org.rha.services.document_generation.db.DocumentHelper;
-import org.rha.services.document_generation.db.dto.Document;
+import org.rha.services.document_generation.v2.db.DocumentHelper;
+import org.rha.services.document_generation.v2.db.dto.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

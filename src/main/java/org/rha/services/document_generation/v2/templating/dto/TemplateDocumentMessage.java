@@ -1,5 +1,7 @@
 package org.rha.services.document_generation.v2.templating.dto;
 
+import org.rha.services.document_generation.v2.dto.PipelineStep;
+
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;

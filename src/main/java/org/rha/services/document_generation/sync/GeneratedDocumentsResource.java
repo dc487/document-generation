@@ -1,7 +1,6 @@
 package org.rha.services.document_generation.sync;
 
-import org.rha.services.document_generation.db.DBHelper;
-import org.rha.services.document_generation.db.DocumentHelper;
+import org.rha.services.document_generation.v2.db.DocumentHelper;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.GET;

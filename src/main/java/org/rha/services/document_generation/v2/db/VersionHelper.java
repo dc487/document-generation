@@ -1,14 +1,15 @@
-package org.rha.services.document_generation.db;
+package org.rha.services.document_generation.v2.db;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.rha.services.document_generation.db.dto.Version;
+import org.rha.services.document_generation.v2.db.dto.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.time.LocalDate;
+import java.util.List;
 
 public class VersionHelper {
     Logger logger = LoggerFactory.getLogger(VersionHelper.class);
@@ -47,8 +48,8 @@ public class VersionHelper {
         Transaction transaction = session.beginTransaction();
 
         // Query for the version
-        TypedQuery<Version> query = session.getNamedQuery(Version.FIND_QUERY);
-        query.setParameter(Version.FIND_QUERY_PARAM, versionId);
+        TypedQuery<Version> query = session.getNamedQuery(Version.FIND_BY_ID_QUERY);
+        query.setParameter(Version.FIND_BY_ID_QUERY_PARAM, versionId);
         Version document = query.getSingleResult();
 
         // Commit and close
@@ -57,6 +58,26 @@ public class VersionHelper {
 
         logger.info("Retrieved version with ID " + versionId + " from database!");
         return document;
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Version> getAllVersionsMatching(String sourceSystemId, String documentType, String documentUrn) {
+        // Get session and begin transaction
+        Session session = DBHelper.getSession();
+        Transaction transaction = session.beginTransaction();
+
+        // Query for all versions matching the params
+        Query query = session.getNamedQuery(Version.FIND_ALL_VERSIONS_MATCHING_QUERY);
+        query.setParameter(Version.SOURCE_SYSTEM_ID_PARAM, sourceSystemId);
+        query.setParameter(Version.DOCUMENT_TYPE_PARAM, documentType);
+        query.setParameter(Version.DOCUMENT_URN_PARAM, documentUrn);
+        List<Version> retrievedVersions = (List<Version>) query.getResultList();
+
+        // Commit and close
+        transaction.commit();
+        session.close();
+
+        return retrievedVersions;
     }
 
     /**

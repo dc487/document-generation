@@ -1,4 +1,4 @@
-package org.rha.services.document_generation.db.dto;
+package org.rha.services.document_generation.v2.db.dto;
 
 import javax.persistence.*;
 import java.time.LocalDate;

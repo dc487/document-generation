@@ -1,7 +1,7 @@
 package org.rha.services.document_generation.v2;
 
-import org.rha.services.document_generation.db.DocumentHelper;
-import org.rha.services.document_generation.db.dto.Document;
+import org.rha.services.document_generation.v2.db.DocumentHelper;
+import org.rha.services.document_generation.v2.db.dto.Document;
 
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.rha.services.document_generation.v2.templating.dto.TemplateDocumentMessage;

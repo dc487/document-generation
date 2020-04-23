@@ -1,4 +1,4 @@
-package org.rha.services.document_generation.db.dto;
+package org.rha.services.document_generation.v2.db.dto;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -6,8 +6,12 @@ import java.time.LocalDate;
 @NamedQueries(
         {
                 @NamedQuery(
-                        name = Version.FIND_QUERY,
-                        query = "from Version where " + Version.COLUMN_ID + " = :" + Version.FIND_QUERY_PARAM
+                        name = Version.FIND_BY_ID_QUERY,
+                        query = "from Version where " + Version.COLUMN_ID + " = :" + Version.FIND_BY_ID_QUERY_PARAM
+                ),
+                @NamedQuery(
+                        name = Version.FIND_ALL_VERSIONS_MATCHING_QUERY,
+                        query = "from Version where " + Version.COLUMN_SOURCE_SYSTEM_ID + " = :" + Version.SOURCE_SYSTEM_ID_PARAM + " AND " + Version.COLUMN_DOCUMENT_TYPE + " = :" + Version.DOCUMENT_TYPE_PARAM + " AND " + Version.COLUMN_DOCUMENT_URN + " = :" + Version.DOCUMENT_URN_PARAM
                 ),
                 @NamedQuery(
                         name = Version.DELETE_WITH_DELETION_DATE_BEFORE_QUERY,
@@ -20,8 +24,12 @@ import java.time.LocalDate;
 @Table(name = Version.TABLE_NAME)
 public class Version {
 
-    public static final String FIND_QUERY = "findVersionById";
-    public static final String FIND_QUERY_PARAM = "id";
+    public static final String FIND_BY_ID_QUERY = "findVersionById";
+    public static final String FIND_BY_ID_QUERY_PARAM = "id";
+    public static final String FIND_ALL_VERSIONS_MATCHING_QUERY = "findAllVersionsMatching";
+    public static final String SOURCE_SYSTEM_ID_PARAM = "sourceSystemId";
+    public static final String DOCUMENT_TYPE_PARAM = "sourceSystemId";
+    public static final String DOCUMENT_URN_PARAM = "sourceSystemId";
     public static final String DELETE_WITH_DELETION_DATE_BEFORE_QUERY = "deleteAllVersionsWithDeletionDateOlderThan";
     public static final String DELETE_WITH_DELETION_DATE_BEFORE_QUERY_PARAM = "date";
 
@@ -61,11 +69,13 @@ public class Version {
 
     }
 
-    public Version(String sourceSystemId, String documentType, String documentUrn, String documentContentUri) {
+    public Version(String sourceSystemId, String documentType, String documentUrn, String documentContentUri, String securityLabel, LocalDate deletionDate) {
         this.sourceSystemId = sourceSystemId;
         this.documentType = documentType;
         this.documentUrn = documentUrn;
         this.documentContentUri = documentContentUri;
+        this.securityLabel = securityLabel;
+        this.deletionDate = deletionDate;
     }
 
     public int getVersionId() {

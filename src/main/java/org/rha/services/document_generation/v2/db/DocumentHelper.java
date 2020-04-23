@@ -1,8 +1,8 @@
-package org.rha.services.document_generation.db;
+package org.rha.services.document_generation.v2.db;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.rha.services.document_generation.db.dto.Document;
+import org.rha.services.document_generation.v2.db.dto.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
