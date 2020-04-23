@@ -2,6 +2,7 @@ package org.rha.services.document_generation.v2.versioning;
 
 import org.rha.services.document_generation.v2.db.VersionHelper;
 import org.rha.services.document_generation.v2.db.dto.Version;
+import org.rha.services.document_generation.v2.dto.PipelineStep;
 import org.rha.services.document_generation.v2.versioning.dto.CreateVersionRequest;
 import org.rha.services.document_generation.v2.versioning.dto.CreateVersionResponse;
 import org.rha.services.document_generation.v2.versioning.dto.FindVersionsResponse;
@@ -28,7 +29,15 @@ public class VersioningResource {
     @Produces(MediaType.APPLICATION_JSON)
     public CreateVersionResponse createVersion(CreateVersionRequest createVersionRequest) {
 
-        // Save to DB
+            createVersionRequest.getProcessingPipelines().forEach((s, pipelineSteps) -> {
+                logger.info("Pipeline name: " + s);
+                for (PipelineStep step : pipelineSteps) {
+                    logger.info("Step name: " + step.getPipelineStep());
+                    logger.info("Step type: " + step.getClass());
+                }
+            });
+
+        /* Save to DB
         Version version = new Version(
                 createVersionRequest.getVersioning().getSourceSystemId(),
                 createVersionRequest.getVersioning().getDocumentType(),
@@ -37,7 +46,7 @@ public class VersioningResource {
                 "LEVEL_3",
                 LocalDate.now().minusDays(1L));
 
-        versionHelper.saveVersion(version);
+        //versionHelper.saveVersion(version);*/
 
         return null;
     }
