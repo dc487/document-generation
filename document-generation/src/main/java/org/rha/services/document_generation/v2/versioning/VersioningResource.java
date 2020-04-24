@@ -29,14 +29,6 @@ public class VersioningResource {
     @Produces(MediaType.APPLICATION_JSON)
     public CreateVersionResponse createVersion(CreateVersionRequest createVersionRequest) {
 
-            createVersionRequest.getProcessingPipelines().forEach((s, pipelineSteps) -> {
-                logger.info("Pipeline name: " + s);
-                for (PipelineStep step : pipelineSteps) {
-                    logger.info("Step name: " + step.getPipelineStep());
-                    logger.info("Step type: " + step.getClass());
-                }
-            });
-
         /* Save to DB
         Version version = new Version(
                 createVersionRequest.getVersioning().getSourceSystemId(),
