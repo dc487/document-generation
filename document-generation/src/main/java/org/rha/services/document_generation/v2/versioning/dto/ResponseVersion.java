@@ -5,12 +5,21 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 
-public class Version {
+public class ResponseVersion {
     private Long versionId;
     private String sourceSystemId;
     private String documentType;
     private String documentUrn;
     private Map<String, URI> templatedDocuments;
+
+    public ResponseVersion(Long versionId, String sourceSystemId, String documentType,
+                           String documentUrn, Map<String, URI> templatedDocuments) {
+        this.versionId = versionId;
+        this.sourceSystemId = sourceSystemId;
+        this.documentType = documentType;
+        this.documentUrn = documentUrn;
+        this.templatedDocuments = templatedDocuments;
+    }
 
     public Long getVersionId() {
         return versionId;

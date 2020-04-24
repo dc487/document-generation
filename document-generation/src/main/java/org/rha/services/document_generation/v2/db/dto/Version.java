@@ -1,5 +1,7 @@
 package org.rha.services.document_generation.v2.db.dto;
 
+import org.rha.services.document_generation.v2.versioning.dto.CreateVersionRequest;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -28,8 +30,8 @@ public class Version {
     public static final String FIND_BY_ID_QUERY_PARAM = "id";
     public static final String FIND_ALL_VERSIONS_MATCHING_QUERY = "findAllVersionsMatching";
     public static final String SOURCE_SYSTEM_ID_PARAM = "sourceSystemId";
-    public static final String DOCUMENT_TYPE_PARAM = "sourceSystemId";
-    public static final String DOCUMENT_URN_PARAM = "sourceSystemId";
+    public static final String DOCUMENT_TYPE_PARAM = "documentType";
+    public static final String DOCUMENT_URN_PARAM = "documentUrn";
     public static final String DELETE_WITH_DELETION_DATE_BEFORE_QUERY = "deleteAllVersionsWithDeletionDateOlderThan";
     public static final String DELETE_WITH_DELETION_DATE_BEFORE_QUERY_PARAM = "date";
 
@@ -45,7 +47,7 @@ public class Version {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = COLUMN_ID)
-    private int versionId;
+    private Long versionId;
 
     @Column(name = COLUMN_SOURCE_SYSTEM_ID, nullable = false)
     private String sourceSystemId;
@@ -78,11 +80,28 @@ public class Version {
         this.deletionDate = deletionDate;
     }
 
-    public int getVersionId() {
+    /**
+     * Generates a Version dto from a 'create version' request received on the versioning endpoint
+     * @param createVersionRequest the versioning request
+     * @return the new version object
+     */
+    public static Version fromRequest(CreateVersionRequest createVersionRequest) {
+        return new Version(
+                createVersionRequest.getVersioning().getSourceSystemId(),
+                createVersionRequest.getVersioning().getDocumentType(),
+                createVersionRequest.getVersioning().getDocumentUrn(),
+                createVersionRequest.getVersioning().getDocumentContentUri().toString(),
+                //TODO: Add security label and deletion date to request
+                "LEVEL_3",
+                LocalDate.now().minusDays(1L)
+        );
+    }
+
+    public Long getVersionId() {
         return versionId;
     }
 
-    public void setVersionId(int versionId) {
+    public void setVersionId(Long versionId) {
         this.versionId = versionId;
     }
 
