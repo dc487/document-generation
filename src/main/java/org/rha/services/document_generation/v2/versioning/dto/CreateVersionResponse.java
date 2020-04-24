@@ -1,13 +1,13 @@
 package org.rha.services.document_generation.v2.versioning.dto;
 
 public class CreateVersionResponse {
-    private Version version;
+    private ResponseVersion version;
 
-    public Version getVersion() {
+    public ResponseVersion getVersion() {
         return version;
     }
 
-    public void setVersion(final Version version) {
+    public void setVersion(final ResponseVersion version) {
         this.version = version;
     }
 }

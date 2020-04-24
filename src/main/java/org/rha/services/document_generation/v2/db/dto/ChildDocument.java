@@ -1,6 +1,13 @@
 package org.rha.services.document_generation.v2.db.dto;
 
+import org.rha.services.document_generation.v2.dto.PipelineStep;
+import org.rha.services.document_generation.v2.dto.TemplatePipelineStep;
+import org.rha.services.document_generation.v2.versioning.dto.CreateVersionRequest;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @NamedQueries(
         {
@@ -48,10 +55,33 @@ public class ChildDocument {
 
     }
 
-    public ChildDocument(Long childDocumentId, String childDocumentFileType, Version version) {
-        this.childDocumentId = childDocumentId;
+    public ChildDocument(String childDocumentFileType, Version version) {
         this.childDocumentFileType = childDocumentFileType;
         this.version = version;
+    }
+
+    /**
+     * Generates a list of ChildDocument dto from a 'create version' request received on the versioning endpoint
+     * @param createVersionRequest the versioning request
+     * @param version the version to link the child documents to
+     * @return a list containing the child document objects
+     */
+    public static List<ChildDocument> fromRequest(CreateVersionRequest createVersionRequest, Version version) {
+        List<ChildDocument> childDocuments = new ArrayList<>();
+
+        // Create a new child document for each templating step in the request
+        for (Map.Entry<String, List<PipelineStep>> entry : createVersionRequest.getProcessingPipelines().entrySet()) {
+            for (PipelineStep pipelineStep : entry.getValue()) {
+                if (pipelineStep.getPipelineStep().equals(PipelineStep.PipelineStepType.TEMPLATE)) {
+                    // Cast to impl type
+                    TemplatePipelineStep templatePipelineStep = (TemplatePipelineStep) pipelineStep;
+
+                    // Create new child document with the detail
+                    childDocuments.add(new ChildDocument(templatePipelineStep.getTemplateSystemId(), version));
+                }
+            }
+        }
+        return childDocuments;
     }
 
     public Long getChildDocumentId() {

@@ -3,6 +3,7 @@ package org.rha.services.document_generation.v2.db;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.rha.services.document_generation.v2.db.dto.Version;
+import org.rha.services.document_generation.v2.versioning.dto.CreateVersionRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,12 +20,12 @@ public class VersionHelper {
      * @param version the version to save
      * @return the ID of the saved version
      */
-    public int saveVersion(Version version) {
+    public Version saveVersion(Version version) {
         // Get session and begin transaction
         Session session = DBHelper.getSession();
         Transaction transaction = session.beginTransaction();
 
-        // Persist the new document
+        // Persist the new version
         session.persist(version);
 
         // Commit and close
@@ -33,7 +34,17 @@ public class VersionHelper {
 
         logger.info("Saved new version with ID " + version.getVersionId() + " to database!");
 
-        return version.getVersionId();
+        return version;
+    }
+
+    /**
+     * Extracts the version information from a 'create version' request received on the versioning endpoint and saves a
+     * new version to the database
+     * @param createVersionRequest the request received from the versioning service
+     * @return the ID of the saved version
+     */
+    public Version saveVersion(CreateVersionRequest createVersionRequest) {
+        return saveVersion(Version.fromRequest(createVersionRequest));
     }
 
     /**
@@ -60,6 +71,13 @@ public class VersionHelper {
         return document;
     }
 
+    /**
+     * Retrieves all versions that match the specified source system ID, document type and document URN from the database
+     * @param sourceSystemId
+     * @param documentType
+     * @param documentUrn
+     * @return a list containing the matched version objects
+     */
     @SuppressWarnings("unchecked")
     public List<Version> getAllVersionsMatching(String sourceSystemId, String documentType, String documentUrn) {
         // Get session and begin transaction
