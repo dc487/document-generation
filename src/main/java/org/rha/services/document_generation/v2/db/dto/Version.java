@@ -1,9 +1,12 @@
 package org.rha.services.document_generation.v2.db.dto;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.rha.services.document_generation.v2.versioning.dto.CreateVersionRequest;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Set;
 
 @NamedQueries(
         {
@@ -66,6 +69,10 @@ public class Version {
 
     @Column(name = COLUMN_DELETION_DATE, nullable = false)
     private LocalDate deletionDate;
+
+    @OneToMany(mappedBy = "version", fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Set<ChildDocument> childDocuments;
 
     public Version() {
 
@@ -151,5 +158,13 @@ public class Version {
 
     public void setDeletionDate(LocalDate deletionDate) {
         this.deletionDate = deletionDate;
+    }
+
+    public Set<ChildDocument> getChildDocuments() {
+        return childDocuments;
+    }
+
+    public void setChildDocuments(Set<ChildDocument> childDocuments) {
+        this.childDocuments = childDocuments;
     }
 }

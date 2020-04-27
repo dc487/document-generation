@@ -1,4 +1,4 @@
-package org.rha.services.document_generation.components.retention;
+package org.rha.services.document_generation.v2.retention;
 
 import org.rha.services.document_generation.v2.db.DocumentHelper;
 import org.rha.services.document_generation.v2.db.VersionHelper;

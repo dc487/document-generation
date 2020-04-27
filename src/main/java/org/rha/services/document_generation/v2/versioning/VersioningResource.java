@@ -61,7 +61,7 @@ public class VersioningResource {
             // For each of the versions, get their associated child documents and create a map of doc type and
             // doc URI from them
             Map<String, URI> templatedDocs = new HashMap<>();
-            for (ChildDocument childDocument : childDocumentHelper.getAllDocumentsForVersion(version)) {
+            for (ChildDocument childDocument : version.getChildDocuments()) {
                 URI documentUri = childDocument.getChildDocumentUri() == null ? URI.create("") : URI.create(childDocument.getChildDocumentUri());
                 templatedDocs.put(childDocument.getChildDocumentFileType(), documentUri);
             }

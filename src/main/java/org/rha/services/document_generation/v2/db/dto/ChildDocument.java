@@ -47,7 +47,7 @@ public class ChildDocument {
     @Column(name = COLUMN_URI)
     private String childDocumentUri;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = Version.COLUMN_ID)
     private Version version;
 
