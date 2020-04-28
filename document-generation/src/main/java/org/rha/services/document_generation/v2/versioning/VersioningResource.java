@@ -45,12 +45,11 @@ public class VersioningResource {
     }
 
     @GET
-    @Path("{sourceSystemId}/{documentType}/{documentUrn}")
     @Produces(MediaType.APPLICATION_JSON)
     public FindVersionsResponse findVersions(
-            @PathParam(value = "sourceSystemId") String sourceSystemId,
-            @PathParam(value = "documentType") String documentType,
-            @PathParam(value = "documentUrn") String documentUrn) {
+            @QueryParam(value = "sourceSystemId") String sourceSystemId,
+            @QueryParam(value = "documentType") String documentType,
+            @QueryParam(value = "documentUrn") String documentUrn) {
 
         List<ResponseVersion> responseVersions = new ArrayList<>();
 
