@@ -8,10 +8,12 @@ import org.rha.services.document_generation.v2.versioning.dto.CreateVersionReque
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
 
+@ApplicationScoped
 public class ChildDocumentHelper {
     Logger logger = LoggerFactory.getLogger(ChildDocumentHelper.class);
 

@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -27,8 +28,14 @@ public class VersioningResource {
 
     Logger logger = LoggerFactory.getLogger(VersioningResource.class);
 
-    private VersionHelper versionHelper = new VersionHelper();
-    private ChildDocumentHelper childDocumentHelper = new ChildDocumentHelper();
+    @Inject
+    VersioningService versioningService;
+
+    @Inject
+    VersionHelper versionHelper;
+
+    @Inject
+    ChildDocumentHelper childDocumentHelper;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -40,6 +47,8 @@ public class VersioningResource {
 
         // Save new child documents to database for each templating step in the request
         childDocumentHelper.saveAllChildDocuments(createVersionRequest, version);
+
+        //TODO: Place messages on queues based on pipeline request
 
         return null;
     }
@@ -81,6 +90,12 @@ public class VersioningResource {
     @Path("{versionId}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response getVersion(@PathParam(value = "versionId") Long versionId) {
-        return null;
+        Version version = versionHelper.getVersionById(versionId);
+
+        if (version == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        return versioningService.getDocumentContent(version);
     }
 }
