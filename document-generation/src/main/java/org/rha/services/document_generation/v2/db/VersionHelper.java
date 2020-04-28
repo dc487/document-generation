@@ -7,11 +7,12 @@ import org.rha.services.document_generation.v2.versioning.dto.CreateVersionReque
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import java.time.LocalDate;
 import java.util.List;
 
+@ApplicationScoped
 public class VersionHelper {
     Logger logger = LoggerFactory.getLogger(VersionHelper.class);
 
@@ -50,25 +51,21 @@ public class VersionHelper {
     /**
      * Retrieves the version with the specified ID from the database
      * @param versionId the ID of the version to get
-     * @return an instance of the Version model representing the retrieved version
+     * @return an instance of the Version model representing the retrieved version, null if no version found with ID
      */
     @SuppressWarnings("unchecked")
-    public Version getVersionById(int versionId) {
+    public Version getVersionById(Long versionId) {
         // Get session and begin transaction
         Session session = DBHelper.getSession();
         Transaction transaction = session.beginTransaction();
 
-        // Query for the version
-        TypedQuery<Version> query = session.getNamedQuery(Version.FIND_BY_ID_QUERY);
-        query.setParameter(Version.FIND_BY_ID_QUERY_PARAM, versionId);
-        Version document = query.getSingleResult();
+        Version version = session.get(Version.class, versionId);
 
         // Commit and close
         transaction.commit();
         session.close();
 
-        logger.info("Retrieved version with ID " + versionId + " from database!");
-        return document;
+        return version;
     }
 
     /**
