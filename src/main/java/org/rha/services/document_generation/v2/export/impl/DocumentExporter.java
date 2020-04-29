@@ -27,7 +27,6 @@ public class DocumentExporter implements IDocumentExporter {
 
     Logger logger = LoggerFactory.getLogger(DocumentExporter.class);
 
-    //TODO: Use CompletableFuture for this to make async
     @Override
     public URI saveDocument(ExportDocumentRequestMessage requestMessage) throws Exception {
 
