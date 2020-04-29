@@ -20,6 +20,8 @@ import java.time.LocalDate;
     }
 )
 
+//TODO: Move this table to a separate templated document database when the services are split up
+
 @Entity
 @Table(name = Document.TABLE_NAME)
 public class Document {
