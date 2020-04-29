@@ -16,11 +16,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Path("/api/versions")
 @ApplicationScoped
@@ -34,19 +30,12 @@ public class VersioningResource {
     @Inject
     VersionHelper versionHelper;
 
-    @Inject
-    ChildDocumentHelper childDocumentHelper;
-
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public CreateVersionResponse createVersion(CreateVersionRequest createVersionRequest) {
 
-        // Save version information to DB
-        Version version = versionHelper.saveVersion(createVersionRequest);
-
-        // Save new child documents to database for each templating step in the request
-        childDocumentHelper.saveAllChildDocuments(createVersionRequest, version);
+        versioningService.saveVersionAndChildDocs(createVersionRequest);
 
         //TODO: Place messages on queues based on pipeline request
 
@@ -60,28 +49,7 @@ public class VersioningResource {
             @QueryParam(value = "documentType") String documentType,
             @QueryParam(value = "documentUrn") String documentUrn) {
 
-        List<ResponseVersion> responseVersions = new ArrayList<>();
-
-        // Get all matching versions from DB
-        List<Version> versions = versionHelper.getAllVersionsMatching(sourceSystemId, documentType, documentUrn);
-
-        for (Version version : versions) {
-            // For each of the versions, get their associated child documents and create a map of doc type and
-            // doc URI from them
-            Map<String, URI> templatedDocs = new HashMap<>();
-            for (ChildDocument childDocument : version.getChildDocuments()) {
-                URI documentUri = childDocument.getChildDocumentUri() == null ? URI.create("") : URI.create(childDocument.getChildDocumentUri());
-                templatedDocs.put(childDocument.getChildDocumentFileType(), documentUri);
-            }
-
-            // Add new response version (version detail + templated docs list) to response list
-            responseVersions.add(new ResponseVersion(
-                    version.getVersionId(),
-                    version.getSourceSystemId(),
-                    version.getDocumentType(),
-                    version.getDocumentUrn(),
-                    templatedDocs));
-        }
+        List<ResponseVersion> responseVersions = versioningService.findAllVersionsAndTemplateUris(sourceSystemId, documentType, documentUrn);
 
         return new FindVersionsResponse(responseVersions);
     }
