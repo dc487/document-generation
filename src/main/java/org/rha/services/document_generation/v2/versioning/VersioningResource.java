@@ -1,8 +1,6 @@
 package org.rha.services.document_generation.v2.versioning;
 
-import org.rha.services.document_generation.v2.db.ChildDocumentHelper;
 import org.rha.services.document_generation.v2.db.VersionHelper;
-import org.rha.services.document_generation.v2.db.dto.ChildDocument;
 import org.rha.services.document_generation.v2.db.dto.Version;
 import org.rha.services.document_generation.v2.versioning.dto.CreateVersionRequest;
 import org.rha.services.document_generation.v2.versioning.dto.CreateVersionResponse;
