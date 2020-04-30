@@ -11,6 +11,7 @@
         <module>versioning-service</module>
         <module>templating-service</module>
         <module>export-service</module>
+        <module>conversion-service</module>
     </modules>
     <properties>
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
