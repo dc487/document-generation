@@ -1,11 +1,12 @@
-package org.rha.services.document_generation.export.dto;
+package export;
 
 import java.net.URI;
+import java.util.Map;
 
 public class ExportDocumentRequestMessage {
     private URI documentUri;
     private String exportSystemId;
-    private ExportMetadata exportMetadata;
+    private Map<String,String> exportMetadata;
     private String sourceSystemId;
     private String documentType;
     private String documentUrn;
@@ -30,11 +31,11 @@ public class ExportDocumentRequestMessage {
         this.exportSystemId = exportSystemId;
     }
 
-    public ExportMetadata getExportMetadata() {
+    public Map<String,String> getExportMetadata() {
         return exportMetadata;
     }
 
-    public void setExportMetadata(ExportMetadata exportMetadata) {
+    public void setExportMetadata(Map<String,String> exportMetadata) {
         this.exportMetadata = exportMetadata;
     }
 

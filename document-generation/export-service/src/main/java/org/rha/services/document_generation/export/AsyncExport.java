@@ -1,9 +1,9 @@
 package org.rha.services.document_generation.export;
 
+import export.ExportDocumentRequestMessage;
 import org.eclipse.microprofile.reactive.messaging.Acknowledgment;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
-import org.rha.services.document_generation.export.dto.ExportDocumentRequestMessage;
 import org.rha.services.document_generation.export.dto.ExportDocumentSuccessMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

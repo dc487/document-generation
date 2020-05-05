@@ -1,6 +1,6 @@
-package org.rha.services.document_generation.templating.dto;
+package templating;
 
-import org.rha.services.document_generation.templating.pipeline.dto.PipelineStep;
+import pipeline.dto.PipelineStep;
 
 import java.net.URI;
 import java.util.Collections;

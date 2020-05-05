@@ -1,11 +1,11 @@
 package org.rha.services.document_generation.templating;
 
-import org.rha.services.document_generation.templating.dto.TemplateDocumentMessage;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.rha.services.document_generation.templating.db.DocumentHelper;
 import org.rha.services.document_generation.templating.db.dto.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import templating.TemplateDocumentMessage;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.json.bind.Jsonb;

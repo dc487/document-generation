@@ -1,4 +1,4 @@
-package org.rha.services.document_generation.versioning.pipeline.dto;
+package pipeline.dto;
 
 import java.util.Collections;
 import java.util.Map;

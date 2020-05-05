@@ -36,6 +36,14 @@ public class VersioningResource {
         versioningService.saveVersionAndChildDocs(createVersionRequest);
 
         //TODO: Place messages on queues based on pipeline request
+        versioningService.generateMessagesFromPipelines(createVersionRequest);
+
+        logger.info("Sending message to rabbit");
+
+        //versioningService.sendPipelineMessage(createVersionRequest);
+
+        emitter.send(createVersionRequest);
+
 
         return null;
     }

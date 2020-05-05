@@ -1,8 +1,8 @@
 package org.rha.services.document_generation.versioning.db.dto;
 
 import org.rha.services.document_generation.versioning.dto.CreateVersionRequest;
-import org.rha.services.document_generation.versioning.pipeline.dto.PipelineStep;
-import org.rha.services.document_generation.versioning.pipeline.dto.TemplatePipelineStep;
+import pipeline.dto.PipelineStep;
+import pipeline.dto.TemplatePipelineStep;
 
 import javax.persistence.*;
 import java.util.ArrayList;
