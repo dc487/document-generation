@@ -1,5 +1,7 @@
 package org.rha.services.document_generation.versioning;
 
+import org.eclipse.microprofile.reactive.messaging.Channel;
+import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.rha.services.document_generation.versioning.db.VersionHelper;
 import org.rha.services.document_generation.versioning.db.dto.Version;
 import org.rha.services.document_generation.versioning.dto.CreateVersionRequest;
@@ -28,6 +30,9 @@ public class VersioningResource {
     @Inject
     VersionHelper versionHelper;
 
+    @Inject @Channel("test-channel")
+    Emitter<CreateVersionRequest> emitter;
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -42,7 +47,7 @@ public class VersioningResource {
 
         //versioningService.sendPipelineMessage(createVersionRequest);
 
-        emitter.send(createVersionRequest);
+        //emitter.send(createVersionRequest);
 
 
         return null;

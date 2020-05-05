@@ -104,6 +104,7 @@ public class VersioningService {
         return responseVersions;
     }
 
+    //TODO: Replace this with PipelineProcessors? (currently in shared libs temp)
     public void generateMessagesFromPipelines(CreateVersionRequest createVersionRequest) {
 
         for (Map.Entry<String, List<PipelineStep>> entry : createVersionRequest.getProcessingPipelines().entrySet()) {
@@ -142,7 +143,7 @@ public class VersioningService {
 
             templatingPipelines = pipelineSteps;
         }
-        templateDocumentMessage.setProcessingPipeline(templatingPipelines);
+        templateDocumentMessage.setProcessingPipelines(templatingPipelines);
 
         //TODO: Send message to queue
     }
