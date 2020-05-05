@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import templating.TemplateDocumentMessage;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.ws.rs.GET;
@@ -22,7 +23,11 @@ import java.util.concurrent.CompletionStage;
 @ApplicationScoped
 public class TemplatedDocumentsResource {
 
-    DocumentHelper documentHelper = new DocumentHelper();
+    @Inject
+    TemplatedDocumentsService documentsService;
+
+    @Inject
+    DocumentHelper documentHelper;
 
     Logger logger = LoggerFactory.getLogger(TemplatedDocumentsResource.class);
 
@@ -45,7 +50,7 @@ public class TemplatedDocumentsResource {
     }
 
     @Incoming("template-document")
-    public CompletionStage<Void> performDocumentTemplating(byte[] messageBytes)
+    public void performDocumentTemplating(byte[] messageBytes)
             throws Exception {
         try {
             final String message = new String(messageBytes, "UTF-8");
@@ -55,14 +60,16 @@ public class TemplatedDocumentsResource {
             // check to see if valid message
 
             // perform templating
+            documentsService.templateDocument(
+                    templateDocumentMessage.getDocumentTemplateUri(),
+                    templateDocumentMessage.getDocumentContentUri(),
+                    templateDocumentMessage.getDocumentType());
 
-            // send success message. Routing key = SUCCESS.${sourceSystemId}.${documentType}.${documentUrn}
+            // TODO: send success message. Routing key = SUCCESS.${sourceSystemId}.${documentType}.${documentUrn}
 
-            return null;
         } catch (Exception e) {
             logger.error("An unexpected error occurred when performing document templating", e);
-            // Send failure message. Routing key = FAILURE.${sourceSystemId}.${documentType}.${documentUrn}
-            return null;
+            // TODO: Send failure message. Routing key = FAILURE.${sourceSystemId}.${documentType}.${documentUrn}
         }
     }
 }

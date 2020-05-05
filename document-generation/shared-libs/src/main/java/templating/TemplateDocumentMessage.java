@@ -14,7 +14,7 @@ public class TemplateDocumentMessage {
     private String sourceSystemId;
     private String documentType;
     private String documentUrn;
-    private List<PipelineStep> processingPipeline;
+    private List<PipelineStep> processingPipelines;
 
     public URI getDocumentContentUri() {
         return documentContentUri;
@@ -64,11 +64,11 @@ public class TemplateDocumentMessage {
         this.documentUrn = documentUrn;
     }
 
-    public List<PipelineStep> getProcessingPipeline() {
-        return processingPipeline;
+    public List<PipelineStep> getProcessingPipelines() {
+        return processingPipelines;
     }
 
-    public void setProcessingPipeline(final List<PipelineStep> processingPipeline) {
-        this.processingPipeline = Objects.requireNonNullElse(processingPipeline, Collections.emptyList());
+    public void setProcessingPipelines(final List<PipelineStep> processingPipelines) {
+        this.processingPipelines = Objects.requireNonNullElse(processingPipelines, Collections.emptyList());
     }
 }

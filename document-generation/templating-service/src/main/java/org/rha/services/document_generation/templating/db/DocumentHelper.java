@@ -6,10 +6,12 @@ import org.rha.services.document_generation.templating.db.dto.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.time.LocalDate;
 
+@ApplicationScoped
 public class DocumentHelper {
     Logger logger = LoggerFactory.getLogger(DocumentHelper.class);
 
