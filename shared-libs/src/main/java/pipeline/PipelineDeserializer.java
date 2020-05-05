@@ -1,9 +1,9 @@
-package org.rha.services.document_generation.versioning.pipeline;
+package pipeline;
 
-import org.rha.services.document_generation.versioning.pipeline.dto.ConvertPipelineStep;
-import org.rha.services.document_generation.versioning.pipeline.dto.ExportPipelineStep;
-import org.rha.services.document_generation.versioning.pipeline.dto.PipelineStep;
-import org.rha.services.document_generation.versioning.pipeline.dto.TemplatePipelineStep;
+import pipeline.dto.ConvertPipelineStep;
+import pipeline.dto.ExportPipelineStep;
+import pipeline.dto.PipelineStep;
+import pipeline.dto.TemplatePipelineStep;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

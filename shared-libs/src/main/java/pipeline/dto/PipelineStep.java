@@ -1,6 +1,6 @@
-package org.rha.services.document_generation.templating.pipeline.dto;
+package pipeline.dto;
 
-import org.rha.services.document_generation.templating.pipeline.PipelineDeserializer;
+import pipeline.PipelineDeserializer;
 
 import javax.json.bind.annotation.JsonbTypeDeserializer;
 

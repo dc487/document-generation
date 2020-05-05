@@ -1,4 +1,4 @@
-package org.rha.services.document_generation.templating.pipeline.dto;
+package pipeline.dto;
 
 import java.net.URI;
 

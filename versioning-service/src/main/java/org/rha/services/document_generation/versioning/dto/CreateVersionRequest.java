@@ -1,7 +1,6 @@
 package org.rha.services.document_generation.versioning.dto;
 
-
-import org.rha.services.document_generation.versioning.pipeline.dto.PipelineStep;
+import pipeline.dto.PipelineStep;
 
 import java.util.Collections;
 import java.util.List;

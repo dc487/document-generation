@@ -1,11 +1,16 @@
 package org.rha.services.document_generation.versioning;
 
+import export.ExportDocumentRequestMessage;
 import org.rha.services.document_generation.versioning.db.ChildDocumentHelper;
 import org.rha.services.document_generation.versioning.db.VersionHelper;
 import org.rha.services.document_generation.versioning.db.dto.ChildDocument;
 import org.rha.services.document_generation.versioning.db.dto.Version;
 import org.rha.services.document_generation.versioning.dto.CreateVersionRequest;
 import org.rha.services.document_generation.versioning.dto.ResponseVersion;
+import pipeline.dto.ExportPipelineStep;
+import pipeline.dto.PipelineStep;
+import pipeline.dto.TemplatePipelineStep;
+import templating.TemplateDocumentMessage;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -97,5 +102,62 @@ public class VersioningService {
         }
 
         return responseVersions;
+    }
+
+    public void generateMessagesFromPipelines(CreateVersionRequest createVersionRequest) {
+
+        for (Map.Entry<String, List<PipelineStep>> entry : createVersionRequest.getProcessingPipelines().entrySet()) {
+
+            // Get the first pipeline:
+            PipelineStep pipelineStep = entry.getValue().get(0);
+
+            switch (pipelineStep.getPipelineStep()) {
+                case TEMPLATE:
+                    sendTemplatingMessage(createVersionRequest, entry, (TemplatePipelineStep) pipelineStep);
+                    break;
+                case EXPORT:
+                    sendExportMessage(createVersionRequest, (ExportPipelineStep) pipelineStep);
+                    break;
+            }
+        }
+    }
+
+    private void sendTemplatingMessage(CreateVersionRequest createVersionRequest, Map.Entry<String, List<PipelineStep>> entry, TemplatePipelineStep pipelineStep) {
+
+        // Create the template document message
+        TemplateDocumentMessage templateDocumentMessage = new TemplateDocumentMessage();
+        templateDocumentMessage.setTemplateName(pipelineStep.getTemplateSystemId());
+        templateDocumentMessage.setDocumentTemplateUri(pipelineStep.getDocumentTemplateUri());
+        templateDocumentMessage.setSourceSystemId(createVersionRequest.getVersioning().getSourceSystemId());
+        templateDocumentMessage.setDocumentType(createVersionRequest.getVersioning().getDocumentType());
+        templateDocumentMessage.setDocumentUrn(createVersionRequest.getVersioning().getDocumentUrn());
+        templateDocumentMessage.setDocumentContentUri(createVersionRequest.getVersioning().getDocumentContentUri());
+
+        List<PipelineStep> templatingPipelines = new ArrayList<>();
+
+        // If there are more steps in the pipeline, set the pipeline (with the current step removed)
+        if (entry.getValue().size() > 1) {
+            List<PipelineStep> pipelineSteps = entry.getValue();
+            pipelineSteps.remove(0);
+
+            templatingPipelines = pipelineSteps;
+        }
+        templateDocumentMessage.setProcessingPipeline(templatingPipelines);
+
+        //TODO: Send message to queue
+    }
+
+    private void sendExportMessage(CreateVersionRequest createVersionRequest, ExportPipelineStep pipelineStep) {
+
+        // Create the template document message
+        ExportDocumentRequestMessage exportDocumentRequestMessage = new ExportDocumentRequestMessage();
+        exportDocumentRequestMessage.setDocumentUri(createVersionRequest.getVersioning().getDocumentContentUri());
+        exportDocumentRequestMessage.setExportSystemId(pipelineStep.getExportSystemId());
+        exportDocumentRequestMessage.setExportMetadata(pipelineStep.getExportMetadata());
+        exportDocumentRequestMessage.setSourceSystemId(createVersionRequest.getVersioning().getSourceSystemId());
+        exportDocumentRequestMessage.setDocumentType(createVersionRequest.getVersioning().getDocumentType());
+        exportDocumentRequestMessage.setDocumentUrn(createVersionRequest.getVersioning().getDocumentUrn());
+
+        //TODO: Send message to queue
     }
 }
