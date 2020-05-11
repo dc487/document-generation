@@ -30,7 +30,7 @@ public class DocumentExporter implements IDocumentExporter {
     @Override
     public URI saveDocument(ExportDocumentRequestMessage requestMessage) throws Exception {
 
-        final InputStream documentContent = httpRequestClient.target(requestMessage.getDocumentUri())
+        final InputStream documentContent = httpRequestClient.target(requestMessage.getDocumentContentUri())
                 .request()
                 .accept(MediaType.APPLICATION_OCTET_STREAM_TYPE)
                 .get(InputStream.class);

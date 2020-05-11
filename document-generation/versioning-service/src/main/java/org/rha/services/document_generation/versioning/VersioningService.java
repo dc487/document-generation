@@ -152,7 +152,7 @@ public class VersioningService {
 
         // Create the template document message
         ExportDocumentRequestMessage exportDocumentRequestMessage = new ExportDocumentRequestMessage();
-        exportDocumentRequestMessage.setDocumentUri(createVersionRequest.getVersioning().getDocumentContentUri());
+        exportDocumentRequestMessage.setDocumentContentUri(createVersionRequest.getVersioning().getDocumentContentUri());
         exportDocumentRequestMessage.setExportSystemId(pipelineStep.getExportSystemId());
         exportDocumentRequestMessage.setExportMetadata(pipelineStep.getExportMetadata());
         exportDocumentRequestMessage.setSourceSystemId(createVersionRequest.getVersioning().getSourceSystemId());
