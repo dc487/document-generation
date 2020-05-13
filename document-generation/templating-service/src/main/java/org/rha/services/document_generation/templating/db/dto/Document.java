@@ -1,6 +1,7 @@
 package org.rha.services.document_generation.templating.db.dto;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @NamedQueries(
@@ -8,10 +9,6 @@ import java.time.LocalDate;
         @NamedQuery(
             name = Document.FIND_BY_ID_QUERY,
             query = "from Document where " + Document.COLUMN_ID + " = :" + Document.FIND_BY_ID_QUERY_PARAM
-        ),
-        @NamedQuery(
-                name = Document.FIND_BY_FILE_NAME_QUERY,
-                query = "from Document where " + Document.COLUMN_FILE_NAME + " = :" + Document.FIND_BY_FILE_NAME_QUERY_PARAM
         ),
         @NamedQuery(
                 name = Document.DELETE_WITH_DELETION_DATE_BEFORE_QUERY,
@@ -28,14 +25,11 @@ public class Document {
 
     public static final String FIND_BY_ID_QUERY = "findDocumentById";
     public static final String FIND_BY_ID_QUERY_PARAM = "id";
-    public static final String FIND_BY_FILE_NAME_QUERY = "findDocumentByFileName";
-    public static final String FIND_BY_FILE_NAME_QUERY_PARAM = "fileName";
     public static final String DELETE_WITH_DELETION_DATE_BEFORE_QUERY = "deleteAllDocumentsWithDeletionDateOlderThan";
     public static final String DELETE_WITH_DELETION_DATE_BEFORE_QUERY_PARAM = "date";
 
     public static final String TABLE_NAME = "templated_document";
     public static final String COLUMN_ID = "document_id";
-    public static final String COLUMN_FILE_NAME = "file_name";
     public static final String COLUMN_CONTENT = "content";
     public static final String COLUMN_SECURITY_LABEL = "security_label";
     public static final String COLUMN_DELETION_DATE = "deletion_date";
@@ -45,25 +39,24 @@ public class Document {
     @Column(name = COLUMN_ID)
     private Long id;
 
-    @Column(name = COLUMN_FILE_NAME, nullable = false)
-    private String fileName;
-
     @Lob
-    @Column(name = COLUMN_CONTENT, nullable = false)
+    @Column(name = COLUMN_CONTENT, length = 20971520)
+    @NotNull
     private byte[] content;
 
-    @Column(name = COLUMN_SECURITY_LABEL, nullable = false)
+    @Column(name = COLUMN_SECURITY_LABEL)
+    @NotNull
     private String securityLabel;
 
-    @Column(name = COLUMN_DELETION_DATE, nullable = false)
+    @Column(name = COLUMN_DELETION_DATE)
+    @NotNull
     private LocalDate deletionDate;
 
     public Document() {
 
     }
 
-    public Document(String fileName, byte[] content, String securityLabel, LocalDate deletionDate) {
-        this.fileName = fileName;
+    public Document(byte[] content, String securityLabel, LocalDate deletionDate) {
         this.content = content;
         this.securityLabel = securityLabel;
         this.deletionDate = deletionDate;
@@ -75,14 +68,6 @@ public class Document {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
     }
 
     public byte[] getContent() {

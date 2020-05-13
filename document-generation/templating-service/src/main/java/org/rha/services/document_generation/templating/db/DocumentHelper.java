@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import java.time.LocalDate;
 
 @ApplicationScoped
@@ -60,31 +59,6 @@ public class DocumentHelper {
     }
 
     /**
-     * Retrieves the document with the specified file name from the database
-     * @param fileName the file name of the document to get
-     * @return an instance of the Document model representing the retrieved document
-     */
-    @SuppressWarnings("unchecked")
-    public Document getDocumentByName(String fileName) {
-        // Get session and begin transaction
-        Session session = DBHelper.getSession();
-        Transaction transaction = session.beginTransaction();
-
-        // Query for the document
-        TypedQuery<Document> query = session.getNamedQuery(Document.FIND_BY_FILE_NAME_QUERY);
-        query.setParameter(Document.FIND_BY_FILE_NAME_QUERY_PARAM, fileName);
-        Document document = query.getSingleResult();
-
-        // Commit and close
-        transaction.commit();
-        session.close();
-
-        logger.info("Retrieved document with file name " + fileName + " from database!");
-
-        return document;
-    }
-
-    /**
      * Deletes all documents that are past their retention date
      * @return an int representing the number of deleted documents
      */
@@ -115,8 +89,6 @@ public class DocumentHelper {
         Session session = DBHelper.getSession();
         Transaction transaction = session.beginTransaction();
 
-        //TODO: Deal with null possibility if document not found with ID
-
         Document document = session.get(Document.class, documentId);
 
         if (document != null) {
@@ -130,8 +102,5 @@ public class DocumentHelper {
         // Commit and close
         transaction.commit();
         session.close();
-
-
-
     }
 }

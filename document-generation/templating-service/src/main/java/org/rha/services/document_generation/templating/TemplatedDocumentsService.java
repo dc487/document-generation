@@ -14,7 +14,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 import static org.rha.services.document_generation.templating.utils.LambdaExceptionUtils.rethrowBiConsumer;
@@ -66,7 +65,8 @@ public class TemplatedDocumentsService {
                             final byte[] templatedOutputBytes = templatedOutput.toByteArray();
                             logger.debug("Finished document templating");
 
-                            documentHelper.saveDocument(new Document(UUID.randomUUID().toString(), templatedOutputBytes, "LEVEL_1", LocalDate.now().minusDays(1L)));
+                            //TODO: security label and and date hard coded, add to request message once approach is known
+                            documentHelper.saveDocument(new Document(templatedOutputBytes, "LEVEL_1", LocalDate.now().minusDays(1L)));
                         })
                 );
     }

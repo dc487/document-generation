@@ -5,6 +5,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.rha.services.document_generation.versioning.dto.CreateVersionRequest;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -52,22 +53,28 @@ public class Version {
     @Column(name = COLUMN_ID)
     private Long versionId;
 
-    @Column(name = COLUMN_SOURCE_SYSTEM_ID, nullable = false)
+    @Column(name = COLUMN_SOURCE_SYSTEM_ID)
+    @NotNull
     private String sourceSystemId;
 
-    @Column(name = COLUMN_DOCUMENT_TYPE, nullable = false)
+    @Column(name = COLUMN_DOCUMENT_TYPE)
+    @NotNull
     private String documentType;
 
-    @Column(name = COLUMN_DOCUMENT_URN, nullable = false)
+    @Column(name = COLUMN_DOCUMENT_URN)
+    @NotNull
     private String documentUrn;
 
-    @Column(name = COLUMN_DOCUMENT_CONTENT_URI, nullable = false)
+    @Column(name = COLUMN_DOCUMENT_CONTENT_URI)
+    @NotNull
     private String documentContentUri;
 
-    @Column(name = COLUMN_SECURITY_LABEL, nullable = false)
+    @Column(name = COLUMN_SECURITY_LABEL)
+    @NotNull
     private String securityLabel;
 
-    @Column(name = COLUMN_DELETION_DATE, nullable = false)
+    @Column(name = COLUMN_DELETION_DATE)
+    @NotNull
     private LocalDate deletionDate;
 
     @OneToMany(mappedBy = "version", fetch = FetchType.EAGER)

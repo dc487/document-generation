@@ -5,6 +5,7 @@ import pipeline.dto.PipelineStep;
 import pipeline.dto.TemplatePipelineStep;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +43,7 @@ public class ChildDocument {
     private Long childDocumentId;
 
     @Column(name = COLUMN_TEMPLATE_NAME)
+    @NotNull
     private String templateName;
 
     @Column(name = COLUMN_URI)
