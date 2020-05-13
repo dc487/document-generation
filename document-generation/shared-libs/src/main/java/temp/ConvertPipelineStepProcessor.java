@@ -16,6 +16,9 @@ public class ConvertPipelineStepProcessor {
     void performConvertPipelineStep(final ConvertPipelineStep convertPipelineStep,
                                     final URI currentDocumentUri,
                                     final List<PipelineStep> nextPipelineSteps) {
+
+        //Do work
+
         final URI nextDocumentUri = null;
         pipelineProcessor.performNextPipelineStep(nextPipelineSteps, nextDocumentUri);
     }

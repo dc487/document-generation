@@ -5,6 +5,7 @@ import org.rha.services.document_generation.templating.db.DocumentHelper;
 import org.rha.services.document_generation.templating.db.dto.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import templating.DeleteTemplatedDocumentMessage;
 import templating.TemplateDocumentMessage;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -17,7 +18,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.concurrent.CompletionStage;
 
 @Path("/api/templated-documents")
 @ApplicationScoped
@@ -49,6 +49,9 @@ public class TemplatedDocumentsResource {
 
     }
 
+    /**
+     * Listens for template request messages.
+     */
     @Incoming("template-document")
     public void performDocumentTemplating(byte[] messageBytes)
             throws Exception {
@@ -71,5 +74,29 @@ public class TemplatedDocumentsResource {
             logger.error("An unexpected error occurred when performing document templating", e);
             // TODO: Send failure message. Routing key = FAILURE.${sourceSystemId}.${documentType}.${documentUrn}
         }
+    }
+
+    /**
+     * Deletes the specified templated document from the database
+     */
+    @Incoming("delete-templated-document")
+    public void deleteTemplatedDocOnExport(byte[] messageBytes) {
+        try {
+            final String message = new String(messageBytes, "UTF-8");
+            logger.info("Received message: " + message);
+            final DeleteTemplatedDocumentMessage deleteMessage = jsonb.fromJson(message, DeleteTemplatedDocumentMessage.class);
+
+            // check to see if valid message
+
+            // perform templating
+            documentsService.deleteTemplatedDocument(deleteMessage.getTemplatedDocumentId());
+
+            // TODO: send success message. Routing key = SUCCESS.${sourceSystemId}.${documentType}.${documentUrn}
+
+        } catch (Exception e) {
+            logger.error("An unexpected error occurred when performing document templating", e);
+            // TODO: Send failure message. Routing key = FAILURE.${sourceSystemId}.${documentType}.${documentUrn}
+        }
+
     }
 }

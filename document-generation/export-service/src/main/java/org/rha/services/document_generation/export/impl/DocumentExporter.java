@@ -4,7 +4,7 @@ import export.ExportDocumentRequestMessage;
 import org.rha.services.document_generation.export.DocumentExportException;
 import org.rha.services.document_generation.export.IDocumentExporter;
 import org.rha.services.document_generation.export.IDocumentStore;
-import org.rha.services.document_generation.export.dto.ExportSystem;
+import export.ExportSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

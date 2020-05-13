@@ -17,7 +17,7 @@ import java.util.Map;
                 ),
                 @NamedQuery(
                         name = ChildDocument.UPDATE_DOCUMENT_URI_QUERY,
-                        query = "UPDATE ChildDocument SET " + ChildDocument.COLUMN_URI + " = :" + ChildDocument.DOCUMENT_URI_PARAM + " WHERE " + ChildDocument.COLUMN_FILE_TYPE + " = :" + ChildDocument.DOCUMENT_FILE_TYPE_PARAM + " AND " + Version.COLUMN_ID + " = :" + ChildDocument.VERSION_ID_PARAM
+                        query = "UPDATE ChildDocument SET " + ChildDocument.COLUMN_URI + " = :" + ChildDocument.DOCUMENT_URI_PARAM + " WHERE " + ChildDocument.COLUMN_TEMPLATE_NAME + " = :" + ChildDocument.TEMPLATE_NAME_PARAM + " AND " + Version.COLUMN_ID + " = :" + ChildDocument.VERSION_ID_PARAM
                 )
         }
 )
@@ -30,10 +30,10 @@ public class ChildDocument {
     public static final String VERSION_ID_PARAM = "versionId";
     public static final String UPDATE_DOCUMENT_URI_QUERY = "updateDocumentVersionId";
     public static final String DOCUMENT_URI_PARAM = "documentUri";
-    public static final String DOCUMENT_FILE_TYPE_PARAM = "documentFileType";
+    public static final String TEMPLATE_NAME_PARAM = "templateName";
     public static final String TABLE_NAME = "child_document";
     public static final String COLUMN_ID = "child_document_id";
-    public static final String COLUMN_FILE_TYPE = "child_document_type";
+    public static final String COLUMN_TEMPLATE_NAME = "template_name";
     public static final String COLUMN_URI = "child_document_uri";
 
     @Id
@@ -41,8 +41,8 @@ public class ChildDocument {
     @Column(name = COLUMN_ID)
     private Long childDocumentId;
 
-    @Column(name = COLUMN_FILE_TYPE)
-    private String childDocumentFileType;
+    @Column(name = COLUMN_TEMPLATE_NAME)
+    private String templateName;
 
     @Column(name = COLUMN_URI)
     private String childDocumentUri;
@@ -55,8 +55,8 @@ public class ChildDocument {
 
     }
 
-    public ChildDocument(String childDocumentFileType, Version version) {
-        this.childDocumentFileType = childDocumentFileType;
+    public ChildDocument(String templateName, Version version) {
+        this.templateName = templateName;
         this.version = version;
     }
 
@@ -77,7 +77,7 @@ public class ChildDocument {
                     TemplatePipelineStep templatePipelineStep = (TemplatePipelineStep) pipelineStep;
 
                     // Create new child document with the detail
-                    childDocuments.add(new ChildDocument(templatePipelineStep.getTemplateSystemId(), version));
+                    childDocuments.add(new ChildDocument(templatePipelineStep.getTemplateName(), version));
                 }
             }
         }
@@ -92,12 +92,12 @@ public class ChildDocument {
         this.childDocumentId = childDocumentId;
     }
 
-    public String getChildDocumentFileType() {
-        return childDocumentFileType;
+    public String getTemplateName() {
+        return templateName;
     }
 
-    public void setChildDocumentFileType(String childDocumentFileType) {
-        this.childDocumentFileType = childDocumentFileType;
+    public void setTemplateName(String templateName) {
+        this.templateName = templateName;
     }
 
     public Version getVersion() {

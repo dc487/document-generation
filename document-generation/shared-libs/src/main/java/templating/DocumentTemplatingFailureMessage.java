@@ -1,29 +1,38 @@
-package org.rha.services.document_generation.templating.dto;
+package templating;
 
 import java.net.URI;
 
-public class DocumentTemplatingSuccessMessage {
-    private Long documentTemplatingId;
-    private URI templatedDocumentUri;
+public class DocumentTemplatingFailureMessage {
+    private String failureReason;
+    private URI documentContentUri;
+    private URI documentTemplateUri;
     private String sourceSystemId;
     private String documentType;
     private String documentUrn;
     private String templateName;
 
-    public Long getDocumentTemplatingId() {
-        return documentTemplatingId;
+    public String getFailureReason() {
+        return failureReason;
     }
 
-    public void setDocumentTemplatingId(final Long documentTemplatingId) {
-        this.documentTemplatingId = documentTemplatingId;
+    public void setFailureReason(final String failureReason) {
+        this.failureReason = failureReason;
     }
 
-    public URI getTemplatedDocumentUri() {
-        return templatedDocumentUri;
+    public URI getDocumentContentUri() {
+        return documentContentUri;
     }
 
-    public void setTemplatedDocumentUri(final URI templatedDocumentUri) {
-        this.templatedDocumentUri = templatedDocumentUri;
+    public void setDocumentContentUri(final URI documentContentUri) {
+        this.documentContentUri = documentContentUri;
+    }
+
+    public URI getDocumentTemplateUri() {
+        return documentTemplateUri;
+    }
+
+    public void setDocumentTemplateUri(final URI documentTemplateUri) {
+        this.documentTemplateUri = documentTemplateUri;
     }
 
     public String getSourceSystemId() {

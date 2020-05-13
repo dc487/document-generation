@@ -1,4 +1,4 @@
-package org.rha.services.document_generation.export.dto;
+package export;
 
 public final class ExportSystem {
     public static final String SHAREPOINT = "SHAREPOINT";

@@ -1,28 +1,36 @@
 package export;
 
 import java.net.URI;
-import java.util.Map;
 
-public class ExportDocumentRequestMessage {
-    private URI documentContentUri;
+public class ExportDocumentSuccessMessage {
+    private URI exportedFileUri;
     private String exportSystemId;
-    private Map<String,String> exportMetadata;
     private String sourceSystemId;
     private String documentType;
     private String documentUrn;
     private Long versionId;
     private String templateName;
 
-    public ExportDocumentRequestMessage() {
+    public ExportDocumentSuccessMessage() {
 
     }
 
-    public URI getDocumentContentUri() {
-        return documentContentUri;
+    public ExportDocumentSuccessMessage(final URI exportedFileUri, final String exportSystemId, final String sourceSystemId, final String documentType, final String documentUrn, final Long versionId, final String templateName) {
+        this.exportedFileUri = exportedFileUri;
+        this.exportSystemId = exportSystemId;
+        this.sourceSystemId = sourceSystemId;
+        this.documentType = documentType;
+        this.documentUrn = documentUrn;
+        this.versionId = versionId;
+        this.templateName = templateName;
     }
 
-    public void setDocumentContentUri(URI documentContentUri) {
-        this.documentContentUri = documentContentUri;
+    public URI getExportedFileUri() {
+        return exportedFileUri;
+    }
+
+    public void setExportedFileUri(URI exportedFileUri) {
+        this.exportedFileUri = exportedFileUri;
     }
 
     public String getExportSystemId() {
@@ -31,14 +39,6 @@ public class ExportDocumentRequestMessage {
 
     public void setExportSystemId(String exportSystemId) {
         this.exportSystemId = exportSystemId;
-    }
-
-    public Map<String,String> getExportMetadata() {
-        return exportMetadata;
-    }
-
-    public void setExportMetadata(Map<String,String> exportMetadata) {
-        this.exportMetadata = exportMetadata;
     }
 
     public String getSourceSystemId() {

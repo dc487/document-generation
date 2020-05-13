@@ -1,4 +1,4 @@
-package org.rha.services.document_generation.export.dto;
+package export;
 
 import java.net.URI;
 

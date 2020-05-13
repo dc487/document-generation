@@ -81,12 +81,12 @@ public class ChildDocumentHelper {
     /**
      * Updates the document URI field for all child documents for the specified version and document file type with the specified URI
      * @param version the version to match documents against
-     * @param documentFileType the template file type to match documents against
+     * @param templateName the template name to match documents against
      * @param newUri the URI to update the child document's document URI field to
      * @return count for the number of documents updated
      */
     @SuppressWarnings("unchecked")
-    public int updateDocumentUriForVersionAndFileType(Version version, String documentFileType, String newUri) {
+    public int updateDocumentUriForVersionAndTemplateName(Version version, String templateName, String newUri) {
         // Get session and begin transaction
         Session session = DBHelper.getSession();
         Transaction transaction = session.beginTransaction();
@@ -94,7 +94,7 @@ public class ChildDocumentHelper {
         // Update query for all documents that reference the specified version
         Query query = session.getNamedQuery(ChildDocument.UPDATE_DOCUMENT_URI_QUERY);
         query.setParameter(ChildDocument.VERSION_ID_PARAM, version);
-        query.setParameter(ChildDocument.DOCUMENT_FILE_TYPE_PARAM, documentFileType);
+        query.setParameter(ChildDocument.TEMPLATE_NAME_PARAM, templateName);
         query.setParameter(ChildDocument.DOCUMENT_URI_PARAM, newUri);
         int updateCount = query.executeUpdate();
 
