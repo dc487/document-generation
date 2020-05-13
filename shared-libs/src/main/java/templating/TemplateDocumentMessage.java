@@ -14,6 +14,7 @@ public class TemplateDocumentMessage {
     private String sourceSystemId;
     private String documentType;
     private String documentUrn;
+    private Long versionId;
     private List<PipelineStep> processingPipelines;
 
     public URI getDocumentContentUri() {
@@ -62,6 +63,14 @@ public class TemplateDocumentMessage {
 
     public void setDocumentUrn(final String documentUrn) {
         this.documentUrn = documentUrn;
+    }
+
+    public Long getVersionId() {
+        return versionId;
+    }
+
+    public void setVersionId(Long versionId) {
+        this.versionId = versionId;
     }
 
     public List<PipelineStep> getProcessingPipelines() {

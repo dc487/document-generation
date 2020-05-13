@@ -59,22 +59,21 @@ public class VersioningService {
     /**
      * Saves a new version to the database from the information in the request, then saves child document entries for
      * each templating step in the request's pipelines.
-     * @param createVersionRequest the new version request from a POST request recieved on the versions endpoint
+     * @param createVersionRequest the new version request from a POST request received on the versions endpoint
      */
-    public void saveVersionAndChildDocs(CreateVersionRequest createVersionRequest) {
+    public Version saveVersionAndChildDocs(CreateVersionRequest createVersionRequest) {
         // Save version information to DB
         Version version = versionHelper.saveVersion(createVersionRequest);
 
         // Save new child documents to database for each templating step in the request
         childDocumentHelper.saveAllChildDocuments(createVersionRequest, version);
+
+        return version;
     }
 
     /**
      * Retrieves all versions from the database matching the specified parameters, and then collects a list of the
      * associated templated document types and their URIs
-     * @param sourceSystemId
-     * @param documentType
-     * @param documentUrn
      * @return a list of ResponseVersion objects representing the retrieved versions and their templated document details
      */
     public List<ResponseVersion> findAllVersionsAndTemplateUris(String sourceSystemId, String documentType, String documentUrn) {
@@ -89,7 +88,7 @@ public class VersioningService {
             Map<String, URI> templatedDocs = new HashMap<>();
             for (ChildDocument childDocument : version.getChildDocuments()) {
                 URI documentUri = childDocument.getChildDocumentUri() == null ? URI.create("") : URI.create(childDocument.getChildDocumentUri());
-                templatedDocs.put(childDocument.getChildDocumentFileType(), documentUri);
+                templatedDocs.put(childDocument.getTemplateName(), documentUri);
             }
 
             // Add new response version (version detail + templated docs list) to response list
@@ -104,35 +103,49 @@ public class VersioningService {
         return responseVersions;
     }
 
-    //TODO: Replace this with PipelineProcessors? (currently in shared libs temp)
-    public void generateMessagesFromPipelines(CreateVersionRequest createVersionRequest) {
+    /**
+     * Updates the document URI for the specified version and file type
+     * @param versionId the ID of the version's child documents to update
+     * @param templateName the template name of the associated document
+     * @param docUri the new value for the document URI
+     */
+    public void updateChildDocumentUri(Long versionId, String templateName, String docUri) {
+        Version version = versionHelper.getVersionById(versionId);
+        if (version != null) {
+            childDocumentHelper.updateDocumentUriForVersionAndTemplateName(version, templateName, docUri);
+        }
+    }
 
-        for (Map.Entry<String, List<PipelineStep>> entry : createVersionRequest.getProcessingPipelines().entrySet()) {
+    //TODO: Replace this with PipelineProcessors? (currently in shared libs temp)
+    public void generateMessagesFromPipelines(Version version, Map<String, List<PipelineStep>> processingPipelines) {
+
+        for (Map.Entry<String, List<PipelineStep>> entry : processingPipelines.entrySet()) {
 
             // Get the first pipeline:
             PipelineStep pipelineStep = entry.getValue().get(0);
 
             switch (pipelineStep.getPipelineStep()) {
                 case TEMPLATE:
-                    sendTemplatingMessage(createVersionRequest, entry, (TemplatePipelineStep) pipelineStep);
+                    sendTemplatingMessage(version, entry, (TemplatePipelineStep) pipelineStep);
                     break;
                 case EXPORT:
-                    sendExportMessage(createVersionRequest, (ExportPipelineStep) pipelineStep);
+                    sendExportMessage(version, (ExportPipelineStep) pipelineStep);
                     break;
             }
         }
     }
 
-    private void sendTemplatingMessage(CreateVersionRequest createVersionRequest, Map.Entry<String, List<PipelineStep>> entry, TemplatePipelineStep pipelineStep) {
+    private void sendTemplatingMessage(Version version, Map.Entry<String, List<PipelineStep>> entry, TemplatePipelineStep pipelineStep) {
 
         // Create the template document message
         TemplateDocumentMessage templateDocumentMessage = new TemplateDocumentMessage();
         templateDocumentMessage.setTemplateName(pipelineStep.getTemplateSystemId());
         templateDocumentMessage.setDocumentTemplateUri(pipelineStep.getDocumentTemplateUri());
-        templateDocumentMessage.setSourceSystemId(createVersionRequest.getVersioning().getSourceSystemId());
-        templateDocumentMessage.setDocumentType(createVersionRequest.getVersioning().getDocumentType());
-        templateDocumentMessage.setDocumentUrn(createVersionRequest.getVersioning().getDocumentUrn());
-        templateDocumentMessage.setDocumentContentUri(createVersionRequest.getVersioning().getDocumentContentUri());
+        templateDocumentMessage.setSourceSystemId(version.getSourceSystemId());
+        templateDocumentMessage.setDocumentType(version.getDocumentType());
+        templateDocumentMessage.setDocumentUrn(version.getDocumentUrn());
+        templateDocumentMessage.setDocumentContentUri(URI.create(version.getDocumentContentUri()));
+        templateDocumentMessage.setVersionId(version.getVersionId());
 
         List<PipelineStep> templatingPipelines = new ArrayList<>();
 
@@ -148,16 +161,17 @@ public class VersioningService {
         //TODO: Send message to queue
     }
 
-    private void sendExportMessage(CreateVersionRequest createVersionRequest, ExportPipelineStep pipelineStep) {
+    private void sendExportMessage(Version version, ExportPipelineStep pipelineStep) {
 
         // Create the template document message
         ExportDocumentRequestMessage exportDocumentRequestMessage = new ExportDocumentRequestMessage();
-        exportDocumentRequestMessage.setDocumentContentUri(createVersionRequest.getVersioning().getDocumentContentUri());
+        exportDocumentRequestMessage.setDocumentContentUri(URI.create(version.getDocumentContentUri()));
         exportDocumentRequestMessage.setExportSystemId(pipelineStep.getExportSystemId());
         exportDocumentRequestMessage.setExportMetadata(pipelineStep.getExportMetadata());
-        exportDocumentRequestMessage.setSourceSystemId(createVersionRequest.getVersioning().getSourceSystemId());
-        exportDocumentRequestMessage.setDocumentType(createVersionRequest.getVersioning().getDocumentType());
-        exportDocumentRequestMessage.setDocumentUrn(createVersionRequest.getVersioning().getDocumentUrn());
+        exportDocumentRequestMessage.setSourceSystemId(version.getSourceSystemId());
+        exportDocumentRequestMessage.setDocumentType(version.getDocumentType());
+        exportDocumentRequestMessage.setDocumentUrn(version.getDocumentUrn());
+        exportDocumentRequestMessage.setVersionId(version.getVersionId());
 
         //TODO: Send message to queue
     }

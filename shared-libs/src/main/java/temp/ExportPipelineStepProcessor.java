@@ -16,6 +16,8 @@ class ExportPipelineStepProcessor {
     void performExportPipelineStep(final ExportPipelineStep exportPipelineStep,
                                    final URI currentDocumentUri,
                                    final List<PipelineStep> nextPipelineSteps) {
+        //Do work
+
         final URI nextDocumentUri = null;
         pipelineProcessor.performNextPipelineStep(nextPipelineSteps, nextDocumentUri);
     }

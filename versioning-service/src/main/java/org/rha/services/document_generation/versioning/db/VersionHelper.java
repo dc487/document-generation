@@ -92,6 +92,8 @@ public class VersionHelper {
         transaction.commit();
         session.close();
 
+        logger.info("Found " + retrievedVersions.size() + " matching versions");
+
         return retrievedVersions;
     }
 

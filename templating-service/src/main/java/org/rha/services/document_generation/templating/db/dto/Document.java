@@ -43,7 +43,7 @@ public class Document {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = COLUMN_ID)
-    private int id;
+    private Long id;
 
     @Column(name = COLUMN_FILE_NAME, nullable = false)
     private String fileName;
@@ -69,11 +69,11 @@ public class Document {
         this.deletionDate = deletionDate;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

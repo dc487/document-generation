@@ -4,6 +4,7 @@ import java.net.URI;
 
 public class TemplatePipelineStep extends PipelineStep {
     private String templateSystemId;
+    private String templateName;
     private URI documentTemplateUri;
 
     public TemplatePipelineStep() {
@@ -16,6 +17,14 @@ public class TemplatePipelineStep extends PipelineStep {
 
     public void setTemplateSystemId(final String templateSystemId) {
         this.templateSystemId = templateSystemId;
+    }
+
+    public String getTemplateName() {
+        return templateName;
+    }
+
+    public void setTemplateName(String templateName) {
+        this.templateName = templateName;
     }
 
     public URI getDocumentTemplateUri() {

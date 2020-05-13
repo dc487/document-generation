@@ -20,7 +20,7 @@ public class DocumentHelper {
      * @param document the document to save
      * @return the ID of the saved document
      */
-    public int saveDocument(Document document) {
+    public Long saveDocument(Document document) {
         // Get session and begin transaction
         Session session = DBHelper.getSession();
         Transaction transaction = session.beginTransaction();
@@ -104,5 +104,34 @@ public class DocumentHelper {
 
         logger.info("Deleted " + deletionCount + " documents past their retention date!");
         return deletionCount;
+    }
+
+    /**
+     * Deletes the document with the specified ID from the database
+     * @param documentId
+     */
+    public void deleteDocumentWithId(Long documentId) {
+        // Get session and begin transaction
+        Session session = DBHelper.getSession();
+        Transaction transaction = session.beginTransaction();
+
+        //TODO: Deal with null possibility if document not found with ID
+
+        Document document = session.get(Document.class, documentId);
+
+        if (document != null) {
+            session.delete(document);
+            logger.info("Deleted document with ID " + documentId + " from database!");
+        }
+        else {
+            logger.info("Couldn't find document with ID " + documentId);
+        }
+
+        // Commit and close
+        transaction.commit();
+        session.close();
+
+
+
     }
 }

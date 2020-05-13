@@ -1,38 +1,30 @@
-package org.rha.services.document_generation.templating.dto;
+package templating;
 
 import java.net.URI;
 
-public class DocumentTemplatingFailureMessage {
-    private String failureReason;
-    private URI documentContentUri;
-    private URI documentTemplateUri;
+public class DocumentTemplatingSuccessMessage {
+    private Long documentTemplatingId;
+    private URI templatedDocumentUri;
     private String sourceSystemId;
     private String documentType;
     private String documentUrn;
     private String templateName;
+    private Long versionId;
 
-    public String getFailureReason() {
-        return failureReason;
+    public Long getDocumentTemplatingId() {
+        return documentTemplatingId;
     }
 
-    public void setFailureReason(final String failureReason) {
-        this.failureReason = failureReason;
+    public void setDocumentTemplatingId(final Long documentTemplatingId) {
+        this.documentTemplatingId = documentTemplatingId;
     }
 
-    public URI getDocumentContentUri() {
-        return documentContentUri;
+    public URI getTemplatedDocumentUri() {
+        return templatedDocumentUri;
     }
 
-    public void setDocumentContentUri(final URI documentContentUri) {
-        this.documentContentUri = documentContentUri;
-    }
-
-    public URI getDocumentTemplateUri() {
-        return documentTemplateUri;
-    }
-
-    public void setDocumentTemplateUri(final URI documentTemplateUri) {
-        this.documentTemplateUri = documentTemplateUri;
+    public void setTemplatedDocumentUri(final URI templatedDocumentUri) {
+        this.templatedDocumentUri = templatedDocumentUri;
     }
 
     public String getSourceSystemId() {
@@ -65,5 +57,13 @@ public class DocumentTemplatingFailureMessage {
 
     public void setTemplateName(final String templateName) {
         this.templateName = templateName;
+    }
+
+    public Long getVersionId() {
+        return versionId;
+    }
+
+    public void setVersionId(Long versionId) {
+        this.versionId = versionId;
     }
 }

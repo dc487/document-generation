@@ -70,4 +70,8 @@ public class TemplatedDocumentsService {
                         })
                 );
     }
+
+    public void deleteTemplatedDocument(Long documentId) {
+        documentHelper.deleteDocumentWithId(documentId);
+    }
 }
