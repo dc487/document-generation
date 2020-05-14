@@ -114,8 +114,8 @@ public class VersioningResource {
                 );
 
             /*
-             TODO: get the templated document ID, send delete message to templating service to delete
-              templated doc from database
+             TODO: get the templated document ID for this version ID and template name, and then
+               send delete message to templating service to delete templated doc from database
             */
             }
 
