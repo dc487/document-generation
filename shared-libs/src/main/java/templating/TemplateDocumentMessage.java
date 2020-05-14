@@ -2,18 +2,28 @@ package templating;
 
 import pipeline.dto.PipelineStep;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 public class TemplateDocumentMessage {
+
+    @NotNull(message = "Must include Document Content URI!")
     private URI documentContentUri;
+
+    @NotBlank(message = "Must not have a blank templateName!")
     private String templateName;
+
     private URI documentTemplateUri;
     private String sourceSystemId;
     private String documentType;
+
+    @NotBlank(message = "Must include document URN!")
     private String documentUrn;
+
     private Long versionId;
     private List<PipelineStep> processingPipelines;
 

@@ -19,6 +19,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
+import javax.validation.Valid;
+import javax.validation.Validator;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -36,6 +38,9 @@ public class VersioningResource {
     @Inject
     VersionHelper versionHelper;
 
+    @Inject
+    Validator validator;
+
     @Inject @Channel("test-channel")
     Emitter<CreateVersionRequest> emitter;
 
@@ -44,7 +49,10 @@ public class VersioningResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public CreateVersionResponse createVersion(CreateVersionRequest createVersionRequest) {
+    public CreateVersionResponse createVersion(@Valid CreateVersionRequest createVersionRequest) {
+
+        // Validation
+
 
         Version version = versioningService.saveVersionAndChildDocs(createVersionRequest);
 

@@ -1,14 +1,21 @@
 package org.rha.services.document_generation.versioning.dto;
 
+import javax.validation.constraints.NotNull;
 import java.net.URI;
 
 public class VersionRequest {
-    private String sourceSystemId;
-    private String documentType;
-    private String documentUrn;
-    //TODO: Change back to uri
-    private URI documentContentUri;
 
+    @NotNull(message = "Must include Source System ID!")
+    private String sourceSystemId;
+
+    @NotNull(message = "Must include Document Type!")
+    private String documentType;
+
+    @NotNull(message = "Must include Document URN!")
+    private String documentUrn;
+
+    @NotNull(message = "Must include Document Content URI!")
+    private URI documentContentUri;
 
     public String getSourceSystemId() {
         return sourceSystemId;
