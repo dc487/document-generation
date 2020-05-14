@@ -1,11 +1,17 @@
 package pipeline.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 
 public class ExportPipelineStep extends PipelineStep {
+
+    @NotBlank(message = "must not be empty or null!")
     private String exportSystemId;
+
+    @NotNull(message = "must not be null!")
     private Map<String, String> exportMetadata;
 
     public ExportPipelineStep() {

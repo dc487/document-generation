@@ -19,7 +19,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Set;
 
 @Path("/api/templated-documents")
 @ApplicationScoped
@@ -66,24 +65,16 @@ public class TemplatedDocumentsResource {
             TemplateDocumentMessage templateDocumentMessage = jsonb.fromJson(message, TemplateDocumentMessage.class);
 
             // check to see if valid message
-            Set<String> violations = validator.validateMessage(templateDocumentMessage);
+            validator.validateMessage(templateDocumentMessage);
 
-            if (violations.isEmpty()) {
-                // perform templating
-                documentsService.templateDocument(
-                        templateDocumentMessage.getDocumentTemplateUri(),
-                        templateDocumentMessage.getDocumentContentUri(),
-                        templateDocumentMessage.getDocumentType());
+            // perform templating
+            documentsService.templateDocument(
+                    templateDocumentMessage.getDocumentTemplateUri(),
+                    templateDocumentMessage.getDocumentContentUri(),
+                    templateDocumentMessage.getDocumentType());
 
-                // TODO: send success message. Routing key = SUCCESS.${sourceSystemId}.${documentType}.${documentUrn}
-            }
-            else {
-                logger.info("### MESSAGE VALIDATION FAILED! ###");
-                violations.forEach(
-                        v -> logger.info(v)
-                );
-                logger.info("### MESSAGE VALIDATION FAILED! ###");
-            }
+            // TODO: send success message. Routing key = SUCCESS.${sourceSystemId}.${documentType}.${documentUrn}
+
         } catch (Exception e) {
             logger.error("An unexpected error occurred when performing document templating", e);
             // TODO: Send failure message. Routing key = FAILURE.${sourceSystemId}.${documentType}.${documentUrn}

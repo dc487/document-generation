@@ -11,17 +11,22 @@ import java.util.Objects;
 
 public class TemplateDocumentMessage {
 
-    @NotNull(message = "Must include Document Content URI!")
+    @NotNull(message = "must not be null")
     private URI documentContentUri;
 
-    @NotBlank(message = "Must not have a blank templateName!")
+    @NotBlank(message = "must not be empty or null!")
     private String templateName;
 
+    @NotNull(message = "must not be null")
     private URI documentTemplateUri;
+
+    @NotBlank(message = "must not be empty or null!")
     private String sourceSystemId;
+
+    @NotBlank(message = "must not be empty or null!")
     private String documentType;
 
-    @NotBlank(message = "Must include document URN!")
+    @NotBlank(message = "must not be empty or null!")
     private String documentUrn;
 
     private Long versionId;
