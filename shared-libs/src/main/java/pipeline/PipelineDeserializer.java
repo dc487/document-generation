@@ -24,7 +24,7 @@ public class PipelineDeserializer implements JsonbDeserializer<PipelineStep> {
 
         Jsonb jsonb = JsonbBuilder.create();
         JsonObject jsonObject = jsonParser.getObject();
-        String pipelineStep = jsonObject.getString("pipelineStep");
+        String pipelineStep = jsonObject.getString("pipelineStep", "EMPTY");
 
         logger.info("Deserializing pipeline with step '" + pipelineStep);
 
@@ -38,6 +38,8 @@ public class PipelineDeserializer implements JsonbDeserializer<PipelineStep> {
             case "EXPORT":
                 logger.info("Detected as a export step!");
                 return jsonb.fromJson(jsonObject.toString(), ExportPipelineStep.class);
+            case "EMPTY":
+                throw new JsonbException("Each stage in the pipeline must have a pipelineStep attribute! Cannot be null.");
             default:
                 throw new JsonbException(pipelineStep + " is not a valid pipeline step type!");
         }
