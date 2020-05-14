@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import templating.DeleteTemplatedDocumentMessage;
 import templating.TemplateDocumentMessage;
+import templating.TemplateMessageValidator;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -18,6 +19,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Set;
 
 @Path("/api/templated-documents")
 @ApplicationScoped
@@ -28,6 +30,9 @@ public class TemplatedDocumentsResource {
 
     @Inject
     DocumentHelper documentHelper;
+
+    @Inject
+    TemplateMessageValidator validator;
 
     Logger logger = LoggerFactory.getLogger(TemplatedDocumentsResource.class);
 
@@ -58,18 +63,27 @@ public class TemplatedDocumentsResource {
         try {
             final String message = new String(messageBytes, "UTF-8");
             logger.info("Received message: " + message);
-            final TemplateDocumentMessage templateDocumentMessage = jsonb.fromJson(message, TemplateDocumentMessage.class);
+            TemplateDocumentMessage templateDocumentMessage = jsonb.fromJson(message, TemplateDocumentMessage.class);
 
             // check to see if valid message
+            Set<String> violations = validator.validateMessage(templateDocumentMessage);
 
-            // perform templating
-            documentsService.templateDocument(
-                    templateDocumentMessage.getDocumentTemplateUri(),
-                    templateDocumentMessage.getDocumentContentUri(),
-                    templateDocumentMessage.getDocumentType());
+            if (violations.isEmpty()) {
+                // perform templating
+                documentsService.templateDocument(
+                        templateDocumentMessage.getDocumentTemplateUri(),
+                        templateDocumentMessage.getDocumentContentUri(),
+                        templateDocumentMessage.getDocumentType());
 
-            // TODO: send success message. Routing key = SUCCESS.${sourceSystemId}.${documentType}.${documentUrn}
-
+                // TODO: send success message. Routing key = SUCCESS.${sourceSystemId}.${documentType}.${documentUrn}
+            }
+            else {
+                logger.info("### MESSAGE VALIDATION FAILED! ###");
+                violations.forEach(
+                        v -> logger.info(v)
+                );
+                logger.info("### MESSAGE VALIDATION FAILED! ###");
+            }
         } catch (Exception e) {
             logger.error("An unexpected error occurred when performing document templating", e);
             // TODO: Send failure message. Routing key = FAILURE.${sourceSystemId}.${documentType}.${documentUrn}
