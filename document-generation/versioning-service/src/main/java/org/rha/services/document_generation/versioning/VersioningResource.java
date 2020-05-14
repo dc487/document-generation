@@ -8,7 +8,6 @@ import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.rha.services.document_generation.versioning.db.VersionHelper;
 import org.rha.services.document_generation.versioning.db.dto.Version;
 import org.rha.services.document_generation.versioning.dto.CreateVersionRequest;
-import org.rha.services.document_generation.versioning.dto.CreateVersionResponse;
 import org.rha.services.document_generation.versioning.dto.FindVersionsResponse;
 import org.rha.services.document_generation.versioning.dto.ResponseVersion;
 import org.slf4j.Logger;
@@ -20,7 +19,6 @@ import javax.inject.Inject;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.validation.Valid;
-import javax.validation.Validator;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -38,9 +36,6 @@ public class VersioningResource {
     @Inject
     VersionHelper versionHelper;
 
-    @Inject
-    Validator validator;
-
     @Inject @Channel("test-channel")
     Emitter<CreateVersionRequest> emitter;
 
@@ -49,24 +44,25 @@ public class VersioningResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public CreateVersionResponse createVersion(@Valid CreateVersionRequest createVersionRequest) {
+    public Response createVersion(@Valid CreateVersionRequest createVersionRequest) {
 
-        // Validation
+        try {
 
+            // Validation
+            versioningService.validatePipelines(createVersionRequest);
 
-        Version version = versioningService.saveVersionAndChildDocs(createVersionRequest);
+            // Save version and child document info to DB
+            Version version = versioningService.saveVersionAndChildDocs(createVersionRequest);
 
-        //TODO: Place messages on queues based on pipeline request
-        versioningService.generateMessagesFromPipelines(version, createVersionRequest.getProcessingPipelines());
+            // Send messages based on pipelines
+            versioningService.generateMessagesFromPipelines(version, createVersionRequest.getProcessingPipelines());
 
-        logger.info("Sending message to rabbit");
+            //emitter.send(createVersionRequest);
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
 
-        //versioningService.sendPipelineMessage(createVersionRequest);
-
-        //emitter.send(createVersionRequest);
-
-
-        return null;
+        return Response.ok().build();
     }
 
     @GET

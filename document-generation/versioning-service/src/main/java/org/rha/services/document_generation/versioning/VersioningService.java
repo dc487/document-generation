@@ -11,6 +11,7 @@ import pipeline.dto.ExportPipelineStep;
 import pipeline.dto.PipelineStep;
 import pipeline.dto.TemplatePipelineStep;
 import templating.TemplateDocumentMessage;
+import validation.MessageValidator;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -36,6 +37,9 @@ public class VersioningService {
 
     @Inject
     ChildDocumentHelper childDocumentHelper;
+
+    @Inject
+    MessageValidator<PipelineStep> validator;
 
     /**
      * Retrieves the content from the specified version's document content URI, returning a response containing the content
@@ -133,6 +137,16 @@ public class VersioningService {
                     break;
             }
         }
+    }
+
+    public void validatePipelines(CreateVersionRequest createVersionRequest) {
+        createVersionRequest.getProcessingPipelines().entrySet().forEach(
+                pipeline -> {
+                    for (PipelineStep pipelineStep : pipeline.getValue()) {
+                        validator.validateMessage(pipelineStep);
+                    }
+                }
+        );
     }
 
     private void sendTemplatingMessage(Version version, Map.Entry<String, List<PipelineStep>> entry, TemplatePipelineStep pipelineStep) {

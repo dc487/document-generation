@@ -1,4 +1,4 @@
-package templating;
+package validation;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -8,14 +8,14 @@ import javax.validation.Validator;
 import java.util.Set;
 
 @ApplicationScoped
-public class TemplateMessageValidator {
+public class MessageValidator<T> {
 
     @Inject
     Validator validator;
 
-    public void validateMessage(TemplateDocumentMessage message) {
+    public void validateMessage(T message) {
 
-        Set<ConstraintViolation<TemplateDocumentMessage>> constraintViolations = validator.validate(message);
+        Set<ConstraintViolation<T>> constraintViolations = validator.validate(message);
         if (!constraintViolations.isEmpty()) {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append("Message validation failed! The following validation errors were found : ");

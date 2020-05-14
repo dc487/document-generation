@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import templating.DeleteTemplatedDocumentMessage;
 import templating.TemplateDocumentMessage;
-import templating.TemplateMessageValidator;
+import validation.MessageValidator;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -31,7 +31,7 @@ public class TemplatedDocumentsResource {
     DocumentHelper documentHelper;
 
     @Inject
-    TemplateMessageValidator validator;
+    MessageValidator<TemplateDocumentMessage> validator;
 
     Logger logger = LoggerFactory.getLogger(TemplatedDocumentsResource.class);
 
